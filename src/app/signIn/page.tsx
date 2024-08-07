@@ -3,11 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { getProviders, signIn } from 'next-auth/react';
 import type { ClientSafeProvider } from 'next-auth/react';
 import DevLogo from '../_components/LogoButton';
-import { FaGoogle, FaDiscord } from "react-icons/fa";
-import { IconType } from "react-icons";
 
 const providerLogos: Record<string, string> = {
-    Google: '/googleLogo.svg',
+  Google: '/googleLogo.svg',
   Discord: '/discordLogo.svg',
   // Add other providers and their icons here
 };
@@ -17,10 +15,16 @@ export default function SignIn() {
 
   useEffect(() => {
     async function loadProviders() {
-      const res = await getProviders();
-      setProviders(res);
+      try {
+        const res = await getProviders();
+        setProviders(res);
+      } catch (error) {
+        console.error('Failed to load providers:', error);
+        // Handle error, maybe set an error state or notify the user
+      }
     }
-    loadProviders();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    loadProviders(); // Calling async function
   }, []);
 
   return (
@@ -32,7 +36,7 @@ export default function SignIn() {
       </span>
       {providers &&
         Object.values(providers).map((provider: ClientSafeProvider) => {
-            const logoSrc = providerLogos[provider.name as keyof typeof providerLogos];
+            const logoSrc = providerLogos[provider.name];
             return (
             <div key={provider.name} className='w-full flex flex-col items-center'>
             <button
