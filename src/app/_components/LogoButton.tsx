@@ -4,7 +4,7 @@ import  Link  from 'next/link'
 
 const DevLogo = () => {
   return (
-    <Link href='/'>
+    <Link href='/home'>
       <div>
       {<Image src="/Deviologo.png" alt='logo' width={64} height={64}/>}
       </div>

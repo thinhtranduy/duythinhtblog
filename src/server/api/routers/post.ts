@@ -16,11 +16,14 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(z.object({ title: z.string().min(1, "Title is required"),
+    content: z.string().min(1, "Content is required"), image: z.string()}))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.post.create({
         data: {
-          name: input.name,
+          title: input.title,
+          content: input.content,
+          image: input.image,
           createdBy: { connect: { id: ctx.session.user.id } },
         },
       });
@@ -32,7 +35,7 @@ export const postRouter = createTRPCRouter({
       where: { createdBy: { id: ctx.session.user.id } },
     });
 
-    return post ?? null;
+    return post;
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
