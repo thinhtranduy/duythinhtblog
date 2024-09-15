@@ -9,8 +9,7 @@ import Image from "next/image";
 export default async function Home() {
  
   return(
-    
-
+    <HydrateClient>
     <main className="flex min-h-screen flex-col p-6">
       <div>
         <LogoButton/>
@@ -34,6 +33,7 @@ export default async function Home() {
           </div>
       </div>
     </main>
+    </HydrateClient>
 
 );
 }

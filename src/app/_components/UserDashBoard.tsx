@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
 import LogOutButton from './LogOutButton';
+import Link from 'next/link';
 
 
 export default function UserDashBoard() {
@@ -22,19 +23,26 @@ export default function UserDashBoard() {
         {session.user.image && <img src={session.user.image} alt="User Image" className='rounded-full w-12 h-12'/>}
       </button>
       {isDashboardVisible && (
-        <div className='absolute top-full right-0 flex flex-col justify-start items-start w-64 mt-2 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2'>
+        <div className='absolute top-full right-0 flex flex-col justify-start items-start w-64 mt-2 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2' style={{ zIndex: 9999 }}>
 
-        <button className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
-                            {session.user.name}
-                        </button>
+            <Link 
+            href={`/user/${session.user.id}`}
+            className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+              <button >
+                    {session.user.name}
+              </button>
+        
+            </Link>
                     <hr className='border-gray-300 flex-grow w-full'/>
                         <button className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
                             Dashboard
                         </button>
                    
-                        <button className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
-                            Create Post
+                        <Link href='/newpost' className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+                          <button>
+                              Create Post
                         </button>
+                        </Link>
                     <hr className='border-gray-300 flex-grow w-full'/>
                         <LogOutButton></LogOutButton>
 

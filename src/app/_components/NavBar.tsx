@@ -7,7 +7,7 @@ import CreatePostButton from './CreatePostButton';
 import LogoButton from './LogoButton';
 const NavBar = () => {
   return (
-    <div className='sticky left-0 top-0 mx-auto bg-white border border-gray-200 '>
+    <div className='sticky left-0 top-0 mx-auto bg-white border border-gray-200 z-50 '>
      <div className='h-16 flex justify-around mx-auto  pr-10 py-2'>
       <div className='w-[50%] h-full flex justify-start gap-4'>
        <LogoButton></LogoButton>
