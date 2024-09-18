@@ -92,7 +92,7 @@ export const postRouter = createTRPCRouter({
   getTenLatest: protectedProcedure.query(async({ctx})=>{
     const posts = await ctx.db.post.findMany({
         orderBy: {createdAt : "desc"},
-        where: { createdBy: { id: ctx.session.user.id } },
+        // where: { createdBy: { id: ctx.session.user.id } },
         take: 10
     });
     return posts;
