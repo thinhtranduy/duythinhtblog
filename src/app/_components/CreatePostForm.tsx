@@ -114,7 +114,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
     setFile(undefined);
   };
   return (
-    <div className='absolute left-[20rem] flex flex-col h-full w-[1000px] '>
+    <div className='absolute left-[20rem] flex flex-col h-full w-[1000px] bg-[#f0f0f0] '>
       <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col justify-start bg-white rounded-lg'>
         {!isPreview ? (
               <div className="relative h-auto mb-10 mx-16 pt-10">
@@ -139,7 +139,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
                     
                   <button
                   onClick={handleRemove}
-                  className="mt-2 bg-white text-red-500 px-4 py-2 rounded-lg text-md hover:bg-gray-100 hover:text-red-700">
+                  className="mt-2 bg-white text-red-500 px-4 py-2 rounded-lg text-md hover:bg-[#f0f0f0] hover:text-red-700">
                   Remove
                 </button>
                 </div>
@@ -181,8 +181,8 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
           />
         </div>
         {!isPreview &&(
-        <div className='bg-gray-100'>
-          <div className='bg-gray-100 flex flex-grow py-2 gap-5 mx-16 '>
+        <div className='bg-[#f0f0f0]'>
+          <div className='bg-[#f0f0f0] flex flex-grow py-2 gap-5 mx-16 '>
               <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleBold().run()}>
                 <BiBold className='text-3xl'/>
               </button>

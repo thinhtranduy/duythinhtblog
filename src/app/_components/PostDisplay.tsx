@@ -2,6 +2,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react'
 import { api } from '~/trpc/react';
 import NavBar from './NavBar';
+import { useRouter } from 'next/navigation'; // Import the useRouter hook
 
 
 export default function PostDisplay({id}: {id: number}) {
@@ -11,10 +12,11 @@ export default function PostDisplay({id}: {id: number}) {
     if(!post){ 
         return <div>Loading...</div>;
     }
+
     return (
       <div>
         <NavBar></NavBar>
-        <div className="bg-white rounded-lg` h-full w-[1000px] mx-auto mt-5">
+        <div className="bg-white rounded-lg` min-h-screen h-full w-[1000px] mx-auto mt-5">
         <div>
         {post?.image ? (
             <img src={post.image} alt={post.title} className="h-[420px] w-[1000px] rounded-t-lg mx-auto" />
@@ -26,7 +28,9 @@ export default function PostDisplay({id}: {id: number}) {
         {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-10 h-10'/>}
         <div className='flex flex-col justify-start'>
         <span className='font-semibold'>{user?.name}</span>
-        {post?.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'No date available'}
+        {post?.createdAt 
+          ? `Posted on ${new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` 
+          : 'No date available'}        
         </div>
         </div>
       <div className='mx-auto'>
@@ -34,10 +38,10 @@ export default function PostDisplay({id}: {id: number}) {
             <h2 className="text-5xl font-bold mb-2 text-start mx-16 pb-2">{post?.title}</h2>
           </div>
           <div dangerouslySetInnerHTML={{__html: post?.content}} className='prose mx-auto'>
-            
       </div>
       </div>
       </div>
+
       </div>
     )
 }

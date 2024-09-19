@@ -47,7 +47,7 @@ export default function UserPage({id} : {id: string}) {
                         {<FaRegComment/>} 0 comments written
                     </div>
                 </div>
-                <div className='relative w-[41%] h-fit bottom-0 left-[20%] transform -translate-y-[-3rem]  px-4 rounded-lg bg-gray-100'>
+                <div className='relative w-[41%] h-fit bottom-0 left-[20%] transform -translate-y-[-3rem]  px-4 rounded-lg bg-[#f0f0f0]'>
                     {posts?.map(post => (
                         <Link key={post.id} href={`/posts/${post.id}`}>
                             <div className='flex flex-col bg-white h-[250px] w-full gap-4 border border-gray-100 rounded-lg mb-5'>

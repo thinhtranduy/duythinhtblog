@@ -106,6 +106,19 @@ export const postRouter = createTRPCRouter({
         where : {id},
       });
       return post;
-  })
+  }),
+
+  deletePost: protectedProcedure
+    .input(z.object({ postId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const { postId } = input;
+      const post = await ctx.db.post.findUnique({ where: { id: postId } });
+      
+      if (!post) throw new Error('Post not found');
+      if (post.createdById !== ctx.session.user.id) throw new Error('Not authorized');
+
+      await ctx.db.post.delete({ where: { id: postId } });
+      return { success: true };
+    }),
 
 });

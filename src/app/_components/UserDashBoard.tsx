@@ -34,9 +34,14 @@ export default function UserDashBoard() {
         
             </Link>
                     <hr className='border-gray-300 flex-grow w-full'/>
-                        <button className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+
+                    <Link href={`/dashboard/${session.user.id}`}
+                    className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+                        <button>
                             Dashboard
                         </button>
+                      </Link>
+                    
                    
                         <Link href='/newpost' className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
                           <button>

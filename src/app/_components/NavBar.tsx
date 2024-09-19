@@ -5,6 +5,7 @@ import LogOutButton from './LogOutButton';
 import UserDashBoard from './UserDashBoard';
 import CreatePostButton from './CreatePostButton';
 import LogoButton from './LogoButton';
+import Notifications from './IconFolder/Notifications';
 const NavBar = () => {
   return (
     <div className='sticky left-0 top-0 mx-auto bg-white border border-gray-200 z-50 '>
@@ -16,8 +17,9 @@ const NavBar = () => {
           <input className=' h-full w-full px-2 border-none rounded-lg text-lg  placeholder-gray-500 placeholder:text-xl text-black outline-none' type="text" placeholder="Search..." />
         </div>
       </div>
-       <div className='flex justify-center gap-3 object-contain'>
+       <div className='flex justify-center items-center gap-3 object-contain'>
         <CreatePostButton></CreatePostButton>
+        <Notifications/>
         <UserDashBoard></UserDashBoard>
        </div>
      </div>
