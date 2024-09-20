@@ -3,6 +3,7 @@ import React from 'react'
 import { api } from '~/trpc/react';
 import NavBar from './NavBar';
 import { useRouter } from 'next/navigation'; // Import the useRouter hook
+import Link from 'next/link';
 
 
 export default function PostDisplay({id}: {id: number}) {
@@ -41,7 +42,9 @@ export default function PostDisplay({id}: {id: number}) {
             <h2 className="text-5xl font-bold mb-2 text-start mx-16 pb-2">{post?.title}</h2>
             <div className='flex gap-2 mx-16 mb-10' >
         {tags?.map((postTag) => (
-      <span className='hover:bg-gray-100 text-xl text-black' key={postTag?.id}>#{postTag?.name}</span> 
+      <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg'
+      key={postTag?.id}>#{postTag?.name}
+      </Link>
     ))}</div>
           </div>
           <div dangerouslySetInnerHTML={{__html: post?.content}} className='prose mx-auto'>

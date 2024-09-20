@@ -48,12 +48,18 @@ export default function Post({ post, tag }: PostProps) {
         </Link>
         </div>
       <div>
-        <h2 className="text-4xl hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16 w-full">{post?.title}</h2>
+        <h2 className="text-[35px] hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16">{post?.title}</h2>
       </div>
       <div className='flex gap-4 mx-16 mb-10' >
         {tags?.map((postTag) => (
-      <span className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>#{postTag?.name}</span> 
+        <Link href={{
+          pathname: `/tag_post/${postTag.id}`,
+        }}  className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg'
+       key={postTag?.id}>
+        #{postTag?.name}
+       </Link>
     ))}
+      
       </div>
     </Link>
     </div>

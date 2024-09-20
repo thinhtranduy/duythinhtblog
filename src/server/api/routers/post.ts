@@ -153,5 +153,30 @@ export const postRouter = createTRPCRouter({
       await ctx.db.post.delete({ where: { id: postId } });
       return { success: true };
     }),
+    
+    getPostsByTag: protectedProcedure
+    .input(z.object({ tagId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const { tagId } = input;
+
+      const posts = await ctx.db.post.findMany({
+        where: {
+          postTags: {
+            some: {
+              tagId,
+            },
+          },
+        },
+        include: {
+          postTags: {
+            include: {
+              tag: true,
+            },
+          },
+        },
+      });
+
+      return posts;
+    }),
 
 });
