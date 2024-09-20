@@ -9,6 +9,9 @@ export default function PostDisplay({id}: {id: number}) {
     const {data : session} = useSession();
     const {data : post} = api.post.getByID.useQuery({id});
     const { data: user } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
+    const postTags = post?.postTags;
+    const tagIds = postTags?.map(postTags => postTags.tagId) ?? [];
+    const { data: tags, error } = api.tags.getTagsByIDs.useQuery({ tagIds });
     if(!post){ 
         return <div>Loading...</div>;
     }
@@ -36,12 +39,15 @@ export default function PostDisplay({id}: {id: number}) {
       <div className='mx-auto'>
           <div className='mx-auto'>
             <h2 className="text-5xl font-bold mb-2 text-start mx-16 pb-2">{post?.title}</h2>
+            <div className='flex gap-2 mx-16 mb-10' >
+        {tags?.map((postTag) => (
+      <span className='hover:bg-gray-100 text-xl text-black' key={postTag?.id}>#{postTag?.name}</span> 
+    ))}</div>
           </div>
           <div dangerouslySetInnerHTML={{__html: post?.content}} className='prose mx-auto'>
       </div>
       </div>
       </div>
-
       </div>
     )
 }

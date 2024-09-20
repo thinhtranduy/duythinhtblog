@@ -12,6 +12,8 @@ import Heading from '@tiptap/extension-heading';
 import Blockquote from '@tiptap/extension-blockquote';
 import Code from '@tiptap/extension-code';
 import { BiBold, BiItalic, BiLink, BiListUl, BiListOl, BiHeading, BiCode, BiSolidQuoteAltLeft } from 'react-icons/bi';
+import 'react-bootstrap-tagsinput/dist/index.css'
+import InputTags from './Tags';
 
 interface CreatePostProps {
   isPreview: boolean;
@@ -19,6 +21,7 @@ interface CreatePostProps {
 
 const CreatePost = ({isPreview}: CreatePostProps) => {
   const router = useRouter();
+  const [tags, setTags] = useState<string[]>([])
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<string | undefined>(undefined);
@@ -83,6 +86,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
         coverImageBase64,
         coverImageName,
         coverImageType,
+        tags,
       });
     router.push('/success');
     } catch (error) {
@@ -168,7 +172,8 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
                   <img src={imageFile} alt={file.name} width={1000} height={420} />
                 </div>) : (<div className="relative h-auto mx-16"/>)}
             </div>)}
-        <div className='mx-16 w-fit'> 
+
+        <div className='mx-16 w-fit h-fit'> 
           <textarea
             id="title"
             value={title}
@@ -176,9 +181,15 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
             placeholder="New post title here..."
             rows={2}
             required
-            className="w-full placeholder:text-5xl placeholder:font-bold placeholder:text-gray-600 h-auto outline-none font-bold text-6xl"
+            className="w-full h-[80%]  placeholder:text-5xl placeholder:font-bold placeholder:text-gray-600 outline-none font-bold text-6xl"
             readOnly={isPreview}
           />
+        </div>
+        <div className='mx-16 w-fit mb-10'>
+          <InputTags tags={tags} setTags={setTags}/>
+        </div>
+        <div>
+
         </div>
         {!isPreview &&(
         <div className='bg-[#f0f0f0]'>
@@ -215,7 +226,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
           />
         </div>
       </form>
-    <div>
+    <div className='mt-3'>
         <button
           onClick={() => formRef.current?.requestSubmit()}
           disabled={isLoading}

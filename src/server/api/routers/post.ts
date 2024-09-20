@@ -40,9 +40,10 @@ export const postRouter = createTRPCRouter({
     coverImageBase64: z.string().optional(), // Cover image file buffer
     coverImageName: z.string().optional(), // Cover image file name
     coverImageType: z.string().optional(), // Cover image file type
+    tags: z.array(z.string()).optional(),
   }))
   .mutation(async ({ ctx, input }) => {
-    const { title, content, coverImageBase64, coverImageName, coverImageType } = input;
+    const { title, content, coverImageBase64, coverImageName, coverImageType, tags } = input;
 
     // Handle file upload if provided
     let coverImageUrl: string | null = null;
@@ -66,14 +67,32 @@ export const postRouter = createTRPCRouter({
           throw new Error('Cover image upload failed');
         }
       }
-    return ctx.db.post.create({
-      data: {
-        title: input.title,
-        content: input.content,
-        image: coverImageUrl ?? null,
-        createdBy: { connect: { id: ctx.session.user.id } },
-      },
+      const post = await ctx.db.post.create({
+        data: {
+          title: input.title,
+          content: input.content,
+          image: coverImageUrl ?? null,
+          createdBy: { connect: { id: ctx.session.user.id } },
+        },
       });
+
+      if (tags && tags.length > 0) {
+        for (const tagName of tags) {
+          const tag = await ctx.db.tag.upsert({
+            where: { name: tagName },
+            update: {},
+            create: { name: tagName },
+          })
+
+      await ctx.db.postTag.create({
+        data: {
+          postId: post.id,
+          tagId: tag.id,
+        },
+      });
+      }}
+
+      return post;
     }),
 
   getLatest: protectedProcedure.query(async ({ ctx }) => {
@@ -93,7 +112,14 @@ export const postRouter = createTRPCRouter({
     const posts = await ctx.db.post.findMany({
         orderBy: {createdAt : "desc"},
         // where: { createdBy: { id: ctx.session.user.id } },
-        take: 10
+        take: 10,
+        include : {
+          postTags : {
+            include: {
+              tag : true
+            }
+          }
+        }
     });
     return posts;
   }),
@@ -104,6 +130,13 @@ export const postRouter = createTRPCRouter({
       const {id} = input;
       const post = await ctx.db.post.findUnique({
         where : {id},
+        include : {
+          postTags : {
+            include: {
+              tag : true
+            }
+          }
+        }
       });
       return post;
   }),

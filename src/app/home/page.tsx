@@ -50,7 +50,7 @@ export default function HomePage() {
         </button>
       </div>
       {posts?.map(post => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post} tag = {post.postTags} />
       ))}
     </div>
 
@@ -60,7 +60,7 @@ export default function HomePage() {
       </span>
       <div>
       {posts?.map(post => (
-        <DicussionPost key={post.id} post={post} />
+        <DicussionPost key={post.id} post={post}/>
       ))}
       </div>
     </div>

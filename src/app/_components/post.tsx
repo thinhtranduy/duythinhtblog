@@ -2,18 +2,23 @@
 import React from 'react';
 import { api } from '~/trpc/react';
 import { Post as PrismaPost } from '@prisma/client';
+import { PostTag } from '@prisma/client';
 import Link from 'next/link';
 import HomeIcon from './IconFolder/HomeIcon';
 interface PostProps {
   post: PrismaPost;
+  tag:  PostTag[];
 }
 
-export default function Post({ post }: PostProps ) {
+export default function Post({ post, tag }: PostProps) {
 
   const { data: user } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
-
+  const postTags = tag; 
+  const tagIds = postTags.map(postTags => postTags.tagId);
+  const { data: tags, error } = api.tags.getTagsByIDs.useQuery({ tagIds });
   return (
     <div className='w-full mx-auto bg-white rounded-lg border border-gray-200 mb-3'>
+      
       <Link href={`/posts/${post.id}`}>
         {/* <div className="bg-white h-fit w-[1000px] mx-auto mb-3"> */}
         <div>
@@ -43,9 +48,13 @@ export default function Post({ post }: PostProps ) {
         </Link>
         </div>
       <div>
-        <h2 className="text-4xl hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16">{post?.title}</h2>
+        <h2 className="text-4xl hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16 w-full">{post?.title}</h2>
       </div>
-      {/* </div> */}
+      <div className='flex gap-4 mx-16 mb-10' >
+        {tags?.map((postTag) => (
+      <span className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>#{postTag?.name}</span> 
+    ))}
+      </div>
     </Link>
     </div>
   );
