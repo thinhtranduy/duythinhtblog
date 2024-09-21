@@ -26,6 +26,8 @@ const emojiMap = {
 export default function Post({ post, tag }: PostProps) {
 
   const { data: user } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
+  const { data: commentPost} = api.comment.getComments.useQuery({ postId: post.id })
+  const totalCountComment = commentPost?.length;
   const postTags = tag; 
   const tagIds = postTags.map(postTags => postTags.tagId);
   const { data: tags, error } = api.tags.getTagsByIDs.useQuery({ tagIds });
@@ -64,7 +66,7 @@ export default function Post({ post, tag }: PostProps) {
         </Link>
         </div>
       <div>
-        <h2 className="text-[35px] hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16">{post?.title}</h2>
+        <h2 className="text-3xl hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16">{post?.title}</h2>
       </div>
       <div className='flex gap-4 mx-16 mb-5' >
         {tags?.map((postTag) => (
@@ -89,7 +91,7 @@ export default function Post({ post, tag }: PostProps) {
               />
             </div>
             ))}
-            <div className='text-md font-light mx-3 inline-block whitespace-nowrap'>
+            <div className='text-md font-light mx-3'>
               {totalCount} Reaction{totalCount !== 1 ? 's' : ''}
             </div>
             </div>
@@ -99,12 +101,16 @@ export default function Post({ post, tag }: PostProps) {
           <CommentIcon></CommentIcon>
           </div> 
           <span className='inline-block whitespace-nowrap'>
-          Add Comments
+            {totalCountComment === 0 
+              ? "Add Comment" 
+              : totalCountComment === 1 
+                ? "1 Comment" 
+                : `${totalCountComment} Comments`}
           </span>
       </div>
       </div>
       <div className='flex gap-3 justify-center items-center text-sm font-light'>
-        {readTime} min read
+        <div className='inline-block whitespace-nowrap'>{readTime} min read</div>
         <BookMarkIcon></BookMarkIcon>
       </div>
 

@@ -26,6 +26,7 @@ model Post {
     createdById String
     postTags   PostTag[]
     reactions Reaction[]
+    comments     Comment[] 
     @@index([title])
 }
 model Reaction {
@@ -33,7 +34,7 @@ model Reaction {
   emoji     String
   postId    Int
   userId    String
-  reacted   Boolean  @default(false) // Indicates if the user has reacted
+  reacted   Boolean  @default(false) 
 
   post      Post     @relation(fields: [postId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
@@ -78,6 +79,7 @@ model User {
     sessions      Session[]
     posts         Post[]
     reactions Reaction[]
+    comments      Comment[]
 }
 
 model VerificationToken {
@@ -103,4 +105,17 @@ model PostTag {
     tag     Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
     @@id([postId, tagId])
+}
+
+model Comment {
+    id        Int       @id @default(autoincrement())
+    text      String
+    postId    Int
+    post      Post      @relation(fields: [postId], references: [id])
+    parentId  Int?     
+    parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+    replies   Comment[]  @relation("CommentReplies")
+    createdAt DateTime   @default(now()) 
+    userId    String     
+    user      User       @relation(fields: [userId], references: [id])
 }

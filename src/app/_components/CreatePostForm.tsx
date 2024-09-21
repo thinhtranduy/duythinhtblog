@@ -75,7 +75,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
   
       if (file) {
         const fileBuffer = await file.arrayBuffer();
-        coverImageBase64 = Buffer.from(fileBuffer).toString('base64'); // Convert buffer to base64
+        coverImageBase64 = Buffer.from(fileBuffer).toString('base64');
         coverImageName = file.name;
         coverImageType = file.type;
       }
@@ -220,7 +220,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
               </button>
             </div>
         </div>)}
-        <div className='mx-16 '>
+        <div className='mx-16 tiptap-editor-one'>
           <EditorContent 
             editor={editor} 
           />

@@ -10,10 +10,18 @@ body::marker {
   @apply marker:bg-black
 }
 
-.tiptap p.is-editor-empty:first-child::before {
+.tiptap-editor-one p.is-editor-empty:first-child::before {
     @apply text-black  text-2xl font-sans;
     content: attr(data-placeholder);
     float: left;
     height: 0;
     pointer-events: none;
+}
+
+.tiptap-editor-two p.is-editor-empty::before {
+  content: attr(data-placeholder); 
+  @apply  text-lg; 
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

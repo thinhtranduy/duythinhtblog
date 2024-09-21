@@ -36,7 +36,7 @@ export default function SignIn() {
     <div className='flex justify-center items-center flex-col bg-inherit h-[50%] w-[35%] my-32 mx-auto rounded-lg'>
       <DevLogo />
       <h1 className="text-4xl font-bold mb-2 mt-10">Join the DEV Community</h1>
-      <span className='text-xl font-light text-black mb-4'>
+      <span className='text-xl font-light text-black mb-4 text-start'>
         DEV Community is a community of 1,879,594 amazing developers
       </span>
       {providers &&
