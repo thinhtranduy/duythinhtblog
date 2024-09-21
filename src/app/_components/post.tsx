@@ -89,13 +89,18 @@ export default function Post({ post, tag }: PostProps) {
               />
             </div>
             ))}
-            <div className='text-md font-light mx-3'>
+            <div className='text-md font-light mx-3 inline-block whitespace-nowrap'>
               {totalCount} Reaction{totalCount !== 1 ? 's' : ''}
             </div>
             </div>
         )}
-      <div className='text-sm font-light mx-10 mb-2 hover:bg-gray-100 rounded-lg px-4 py-1 flex items-center justify-center gap-2'>
-          <CommentIcon></CommentIcon> Add Comments
+      <div className='text-md font-light mx-10 mb-2 hover:bg-gray-100 rounded-lg px-4 py-1 flex items-center justify-start gap-2'>
+          <div>
+          <CommentIcon></CommentIcon>
+          </div> 
+          <span className='inline-block whitespace-nowrap'>
+          Add Comments
+          </span>
       </div>
       </div>
       <div className='flex gap-3 justify-center items-center text-sm font-light'>
