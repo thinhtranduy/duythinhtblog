@@ -25,9 +25,21 @@ model Post {
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
     postTags   PostTag[]
+    reactions Reaction[]
     @@index([title])
 }
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  emoji     String
+  postId    Int
+  userId    String
+  reacted   Boolean  @default(false) // Indicates if the user has reacted
 
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, postId, emoji]) 
+}
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -65,6 +77,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    reactions Reaction[]
 }
 
 model VerificationToken {
