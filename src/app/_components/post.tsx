@@ -91,7 +91,7 @@ export default function Post({ post, tag }: PostProps) {
               />
             </div>
             ))}
-            <div className='text-md font-light mx-3'>
+            <div className='text-md font-light mx-3 inline-block whitespace-nowrap'>
               {totalCount} Reaction{totalCount !== 1 ? 's' : ''}
             </div>
             </div>
