@@ -44,6 +44,7 @@ export default function PostDisplay({ id }: { id: number }) {
   const [comments, setComments] = useState([]);
   const { data: session } = useSession();
   const { data: commentPost, refetch } = api.comment.getComments.useQuery({ postId: id })
+  const totalCountComment = commentPost?.length;
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
   const editor2 = useEditor({
     extensions: [
@@ -246,7 +247,7 @@ export default function PostDisplay({ id }: { id: number }) {
             <hr className='border-[0.5px] border-gray-100 mb-10' />
             <div className='mx-16 w-full'>
               <span className='text-3xl text-black font-bold'>
-                Top comments
+                Top comments ({totalCountComment})
               </span>
               <div className='mt-5 flex w-full gap-3'>
                 <div>

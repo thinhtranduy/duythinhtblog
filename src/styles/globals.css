@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-[#f0f0f0] ;
+  @apply bg-neutral-100
 }
 
 body::marker {

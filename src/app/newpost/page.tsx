@@ -7,7 +7,7 @@ export default function Page() {
   const [isPreview, setIsPreview] = useState(false);
 
   return (  
-    <div className='bg-[#f0f0f0] min-h-screen'>
+    <div className='bg-neutral-100 min-h-screen'>
       
       <div className='relative flex justify-around mx-[-10rem] w-full'>
         <div className='flex items-center py-2 gap-3 mx-[-4rem]'>

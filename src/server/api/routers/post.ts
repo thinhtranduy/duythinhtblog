@@ -179,4 +179,23 @@ export const postRouter = createTRPCRouter({
       return posts;
     }),
 
+    getPostsBySearchTerm: protectedProcedure
+    .input(z.object({ searchTerm: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { searchTerm } = input;
+
+      console.log("Searching for term:", searchTerm); 
+
+      const posts = await ctx.db.post.findMany({
+        where: {
+          OR: [
+            { title: { contains: searchTerm, mode: 'insensitive' } },
+          ],
+        },
+        take: 5,
+      });
+
+      console.log("Found posts:", posts);
+      return posts;
+    }),
 });
