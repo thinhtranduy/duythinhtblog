@@ -47,7 +47,7 @@ const NavBar = () => {
         setResults([]);
         setShowResults(false);
       }
-    }, 300); // Delay of 300ms
+    }, 300);
   
     return () => {
       clearTimeout(handler);

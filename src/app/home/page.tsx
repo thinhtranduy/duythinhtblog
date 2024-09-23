@@ -45,8 +45,8 @@ export default function HomePage() {
           <MenuBar />
         </div>
 
-        <div className="w-[50%] flex flex-col">
-          <div className='flex justify-start gap-3 mb-3 my-5'>
+        <div className="w-[54%] flex flex-col">
+          <div className='flex justify-start gap-3 mb-3 my-3'>
             <button
               className={`text-xl px-4 py-3 hover:bg-white hover:text-[#3b49df] rounded-md ${activeButton === 'Relevant' ? 'font-bold text-black' : 'text-black font-light'}`}
               onClick={() => setActiveButton('Relevant')}

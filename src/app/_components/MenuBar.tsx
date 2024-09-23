@@ -24,7 +24,7 @@ interface MenuButtonProps {
 }
 const MenuButton: React.FC<MenuButtonProps> = ({ children }) => {
     return (
-      <button className='w-full h-full flex gap-2 object-contain text-black font-light  text-items-start text-lg font-sans rounded-lg border-inherit px-2 py-2 my-5 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
+      <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
         {children}
       </button>
     );
@@ -32,7 +32,7 @@ const MenuButton: React.FC<MenuButtonProps> = ({ children }) => {
 const MenuBar = () => {
   return (
     <div>
-        <div className='pb-10 '>
+        <div className='pb-10 mt-5'>
             <MenuButton> {<HomeIcon/>}  Home</MenuButton>
             <MenuButton> {<img src='/devpp.svg' className='h-6 w-6 mr-2'/>}  DEV++</MenuButton>
             <MenuButton> {<ReadingListIcon/>}  Reading List</MenuButton>

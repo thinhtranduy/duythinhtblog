@@ -6,7 +6,7 @@ const DevLogo = () => {
   return (
     <Link href='/home'>
       <div>
-      {<Image src="/Deviologo.png" alt='logo' width={64} height={64}/>}
+      {<Image src="/Deviologo.png" alt='logo' width={58} height={58}/>}
       </div>
     </Link>
   );
