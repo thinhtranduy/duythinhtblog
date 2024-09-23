@@ -40,6 +40,8 @@ export default function PostDisplay({ id }: { id: number }) {
   const { data: commentPost, refetch } = api.comment.getComments.useQuery({ postId: id })
   const totalCountComment = commentPost?.length;
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
+  const {data : reacted} = api.reaction.getReactionCountsForUser.useQuery({postId: id, userId :  user?.id})
+  const totalReactedCount = reacted ? reacted.reduce((sum, r) => sum + r.count, 0) : 0;
 
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function PostDisplay({ id }: { id: number }) {
           <div className='mb-10 w-full'>
             <Tooltip emojis={emojiMap}>
               <div className="flex items-center justify-end">
-                <Reaction />
+                <Reaction reacted={totalReactedCount} />
               </div>
             </Tooltip>
           </div>

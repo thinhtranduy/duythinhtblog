@@ -69,4 +69,28 @@ export const reactionRouter = createTRPCRouter({
       }));
     }),
 
+
+  getReactionCountsForUser: protectedProcedure
+  .input(z.object({ postId: z.number(), userId: z.string().optional() }))
+  .query(async ({ input }) => {
+    const { postId, userId } = input;
+
+    const counts = await db.reaction.groupBy({
+      by: ['emoji'],
+      where: {
+        postId,
+        reacted: true,
+        ...(userId && { userId }),
+      },
+      _count: {
+        emoji: true,
+      },
+    });
+
+    return counts.map(count => ({
+      emoji: count.emoji,
+      count: count._count?.emoji,
+    }));
+  }),
+
 })

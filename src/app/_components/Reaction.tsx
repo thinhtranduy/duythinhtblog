@@ -1,6 +1,19 @@
 import React from 'react'
+type ReactionProps = {
+  reacted: number
+};
+export default function Reaction({ reacted }: ReactionProps) {
 
-export default function Reaction() {
+  if (reacted > 0) {
+    return (
+      <img
+        src="/heart-plus-active-9ea3b22f2bc311281db911d416166c5f430636e76b15cd5df6b3b841d830eefa.svg"
+        alt="Reacted Heart"
+        width="32"
+        height="32"
+      />
+    );
+  }
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" role="img" aria-hidden="true" >
     <g clip-path="url(#clip0_988_3276)">
