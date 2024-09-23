@@ -12,9 +12,9 @@ interface PostViewProps {
 }
 
 export default function PostView(props : PostViewProps) {
-    const {
-        data: session
-      } = useSession();
+    // const {
+    //     data: session
+    //   } = useSession();
     const {data : post}  =  api.post.getByID.useQuery({id: parseInt(props.params.id)});
     if (!post) {
         return <div>Loading...</div>;

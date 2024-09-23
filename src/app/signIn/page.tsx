@@ -12,7 +12,7 @@ import { FaDiscord } from 'react-icons/fa6';
 const providerLogos: Record<string, React.ReactNode> = {
   Google: <GoogleIcon/>,
   Discord: <FaDiscord />,
-  Apple: <AppleIcon />,
+  // Apple: <AppleIcon />,
 };
 
 export default function SignIn() {

@@ -12,7 +12,7 @@ interface UserProfileProps{
 }
 
 export default function UserProfile(props : UserProfileProps) {
-  const {data : session } = useSession();
+  // const {data : session } = useSession();
   const {data : user} = api.user.getUserById.useQuery(props.params.id)
   return (
 

@@ -3,34 +3,27 @@ import { useSession } from 'next-auth/react';
 import React, { ReactNode, use, useEffect, useRef, useState } from 'react'
 import { api } from '~/trpc/react';
 import NavBar from './NavBar';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import TiptapLink from '@tiptap/extension-link';
 import Reaction from './Reaction';
 import CommentIcon from './CommentIcon';
 import BookMarkIcon from './IconFolder/BookMarkIcon';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder'
-import OrderedList from '@tiptap/extension-ordered-list';
-import BulletList from '@tiptap/extension-bullet-list';
-import Heading from '@tiptap/extension-heading';
-import Blockquote from '@tiptap/extension-blockquote';
-import Code from '@tiptap/extension-code';
-import { BiBold, BiItalic, BiLink, BiListUl, BiListOl, BiHeading, BiCode, BiSolidQuoteAltLeft } from 'react-icons/bi';
 import CommentReactIcon from './IconFolder/CommentReactIcon';
 import ReplyIcon from './IconFolder/ReplyIcon';
+import CommentBox from './CommentBox';
+
 interface TooltipProps {
   children: ReactNode;
   emojis: Record<string, string>;
 }
-
 
 type ReactionCount = {
   emoji: string;
   _count: { emoji: number };
 };
 export default function PostDisplay({ id }: { id: number }) {
+  const { data: session } = useSession();
+  const user = session?.user; 
+
   const emojiMap = {
     sparkle_heart: '/sparkle-heart-5f9bee3767e18deb1bb725290cb151c25234768a0e9a2bd39370c382d02920cf.svg',
     multi_unicorn: '/multi-unicorn-b44d6f8c23cdd00964192bedc38af3e82463978aa611b4365bd33a0f1f4f3e97.svg',
@@ -38,72 +31,15 @@ export default function PostDisplay({ id }: { id: number }) {
     exploding_head: '/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg',
     fire: '/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg',
   };
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [content, setContent] = useState('');
-  const [isPreview, setIsPreview] = useState(false);
-  const [comments, setComments] = useState([]);
-  const { data: session } = useSession();
+  const [replyingToCommentId, setReplyingToCommentId] = useState<number | null>(null);
+  const handleReplyClick = (commentId: number | undefined) => {
+    if (commentId !== undefined) {
+        setReplyingToCommentId(commentId);
+    }
+};
   const { data: commentPost, refetch } = api.comment.getComments.useQuery({ postId: id })
   const totalCountComment = commentPost?.length;
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
-  const editor2 = useEditor({
-    extensions: [
-      StarterKit, TiptapLink, OrderedList, BulletList, Blockquote, Code,
-      Blockquote.configure({
-        HTMLAttributes: {
-          class: 'my-custom-class',
-        },
-      }),
-      Heading.configure({
-        HTMLAttributes: {
-          class: 'my-custom-class',
-        },
-      }),
-      Placeholder.configure({
-        placeholder: "Add to the discussion",
-
-      }),
-    ],
-    content,
-    onUpdate: ({ editor }) => {
-      if (!isPreview) {
-        setContent(editor.getHTML());
-      }
-    },
-    editable: !isPreview,
-    editorProps: {
-      attributes: {
-        class: ` prose text-md text-black  min-h-[100px] w-full max-w-[85%] py-2 px-2 list-disc prose-li:marker:text-black font-light border border-gray-200 hover:border-[#2f3ea8] rounded-t-lg !outline-none ${isPreview ? "cursor-default" : ""}`,
-      },
-    },
-  });
-  const submitCommentMutation = api.comment.submitComment.useMutation({
-    onSuccess: (data) => {
-      console.log("Comment submitted:", data);
-      setContent("");
-    },
-    onError: (error) => {
-      console.error("Error submitting comment:", error);
-    },
-  });
-
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    const commentText = editor2?.getHTML();
-    if (!commentText?.trim()) {
-      return;
-    }
-    setIsSubmitting(true);
-
-    await submitCommentMutation.mutateAsync({ text: commentText, postId: id });
-    await refetch();
-    setContent('');
-    editor2?.commands.setContent('');
-    setIsSubmitting(false);
-  };
-
-
 
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {
@@ -119,8 +55,8 @@ export default function PostDisplay({ id }: { id: number }) {
     }
   }, [reactionCounts]);
   const { data: post } = api.post.getByID.useQuery({ id });
-  const { data: user } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
-  const relevantPosts = user?.posts;
+  const { data: author } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
+  const relevantPosts = author?.posts;
   const postTags = post?.postTags;
   const tagIds = postTags?.map(postTags => postTags.tagId) ?? [];
   const { data: tags, error } = api.tags.getTagsByIDs.useQuery({ tagIds });
@@ -188,7 +124,7 @@ export default function PostDisplay({ id }: { id: number }) {
     <div>
       <NavBar></NavBar>
       <div className='w-[90%] flex gap-5'>
-        <div className='w-[20%] mt-20 flex flex-col items-end relative'>
+        <div className='w-[14%] mt-20 flex flex-col items-end relative'>
           <div className='mb-10 w-full'>
             <Tooltip emojis={emojiMap}>
               <div className="flex items-center justify-end">
@@ -201,7 +137,7 @@ export default function PostDisplay({ id }: { id: number }) {
           </div>
           <BookMarkIcon></BookMarkIcon>
         </div>
-        <div className="bg-white rounded-lg min-h-screen h-full w-[55%] mt-5">
+        <div className="bg-white rounded-lg min-h-screen h-full w-[59%] mt-3 border border-neutral-200 ">
           <div>
             {post?.image ? (
               <img src={post.image} alt={post.title} className="h-[420px] w-full rounded-t-lg mx-auto" />
@@ -210,9 +146,9 @@ export default function PostDisplay({ id }: { id: number }) {
             )}
           </div>
           <div className='flex justify-start gap-2 items-center pt-10 mx-16 mb-10'>
-            {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-10 h-10' />}
+            {author?.image && <img src={author.image} alt="author Image" className='rounded-full w-10 h-10' />}
             <div className='flex flex-col justify-start'>
-              <span className='font-semibold'>{user?.name}</span>
+              <span className='font-semibold'>{author?.name}</span>
               {post?.createdAt
                 ? `Posted on ${new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                 : 'No date available'}
@@ -249,84 +185,100 @@ export default function PostDisplay({ id }: { id: number }) {
               <span className='text-3xl text-black font-bold'>
                 Top comments ({totalCountComment})
               </span>
-              <div className='mt-5 flex w-full gap-3'>
+              <div className='mt-5 flex w-[99.5%] gap-3'>
                 <div>
                   {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-10 h-10' />}
                 </div>
-                <div className=' flex-1 tiptap-editor-two'>
-
-                  <EditorContent
-                    editor={editor2}
-                  />
-                  {!isPreview && (
-                    <div className=' relative max-w-[85%] border border-gray-200 hover:border-[#2f3ea8] rounded-b-lg'>
-                      <div className=' flex flex-grow py-1 gap-3 '>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleBold().run()}>
-                          <BiBold className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleItalic().run()}>
-                          <BiItalic className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().setLink({ href: 'https://example.com' }).run()}>
-                          <BiLink className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => { editor2?.chain().focus().toggleBulletList().run() }} >
-                          <BiListUl className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleOrderedList().run()}>
-                          <BiListOl className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleHeading({ level: 1 }).run()}>
-                          <BiHeading className='text-xl' />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleBlockquote().run()}>
-                          <BiSolidQuoteAltLeft />
-                        </button>
-                        <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor2?.chain().focus().toggleCode().run()}>
-                          <BiCode className='text-xl' />
-                        </button>
-                      </div>
-                    </div>)}
-                  <button onClick={handleSubmit}
-                    type="button"
-                    className="mb-4 bg-[#3b49df] hover:bg-[#2f3ea8] text-white text-lg px-4 py-2 rounded-lg mt-2 mr-3"
-                    disabled={isSubmitting}
-                  >
-                     {isSubmitting ? 'Submitting...' : 'Submit'}
-                  </button>
-                  <button
-                    onClick={() => setIsPreview(!isPreview)}
-                    className='mb-4 bg-neutral-300 hover:bg-neutral-400 text-lg text-black px-4 py-2 rounded-lg mt-2'>
-                    {isPreview ? 'Continue Editing' : 'Preview'}
-                  </button>
-                </div>
+                <CommentBox key={id} id={id}  parentId={undefined} onDismiss={() => setReplyingToCommentId(null)}></CommentBox>
               </div>
 
-              <div className=' mt-5 gap-3 flex flex-col w-[85%]'>
+
+
+              <div className='mt-5 gap-3 flex flex-col w-[85%]'>
                 {commentPost?.map((comment) => (
                   <div key={comment.id} className='flex flex-col gap-1 mb-5'>
-                    <div className='flex w-full gap-2' >
-                      {comment.user?.image && <img src={comment.user?.image} alt="User Image" className='rounded-full w-10 h-10' />}
-                      <div className=" border border-neutral-100 min-h-[150px] rounded-lg flex-1 flex flex-col">
-                        <div className='flex gap-2 justify-start items-center'>
-                          <span className="mx-5 text-xl font-light ">{comment.user?.name}</span>
+                    <div className='flex w-full gap-2'>
+                      {comment.user?.image && (
+                        <img src={comment.user?.image} alt="User Image" className='rounded-full w-10 h-10' />
+                      )}
+                      <div className="border border-neutral-200 min-h-[100px] rounded-lg flex-1 flex flex-col">
+                        <div className='flex gap-2 justify-start items-center mt-2'>
+                          <span className="ml-5 text-xl font-sans font-light">{comment.user?.name}</span>
+                          <span className='text-sm text-gray-400 font-light'>•</span>
                           <div className='text-sm text-gray-400 font-light'>
                             {comment?.createdAt
-                              ? `${new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                              ? `${new Date(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                               : 'No date available'}
                           </div>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose mx-5 mb-10 mt-5 text-2xl' />
+                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose mx-5 mt-5 text-2xl' />
                       </div>
                     </div>
-                    <div className='flex gap-2 mx-[3.5rem] mt-3'>
-                      <div className='hover:bg-gray-200'><CommentReactIcon /></div>
-                      <div className='hover:bg-gray-200'><ReplyIcon /></div>
+                    <div className='flex gap-2 ml-[3rem] mt-2 w-[111%]'>
+                      {replyingToCommentId !== comment.id && (
+                        <>
+                          <div className='hover:bg-gray-200 px-2 py-1 rounded-lg'><CommentReactIcon /></div>
+                          <button
+                            className='hover:bg-gray-200 flex gap-1 px-2 py-1 rounded-lg items-center'
+                            onClick={() => handleReplyClick(comment.id)}
+                          >
+                            <ReplyIcon /> Reply
+                          </button>
+                        </>
+                      )}
+                      {replyingToCommentId === comment.id && (
+                        <CommentBox key={id} id={id}  parentId={comment.id} onDismiss={() => setReplyingToCommentId(null)} />
+                      )}
                     </div>
+
+                    {comment.replies && comment.replies.length > 0 && (
+                      <div className="ml-10 mt-5">
+                        {comment.replies.map((reply) => (
+                          <>
+                          <div key={reply.id} className='flex flex-col gap-1 mb-2'>
+                            <div className='flex w-full gap-2'>
+                              {reply.user?.image && (
+                                <img src={reply.user?.image} alt="User Image" className='rounded-full w-8 h-8' />
+                              )}
+                              <div className="border border-neutral-200 min-h-[100px] rounded-lg flex-1 flex flex-col">
+                                <div className='flex gap-2 justify-start items-center mt-2'>
+                                  <span className="ml-5 text-md font-sans font-light">{reply.user?.name}</span>
+                                  <span className='text-sm text-gray-400 font-light'>•</span>
+                                  <div className='text-sm text-gray-400 font-light'>
+                                    {reply?.createdAt
+                                      ? `${new Date(reply.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                                      : 'No date available'}
+                                  </div>
+                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: reply?.text }} className='prose mx-5 mt-2 text-lg' />
+                              </div>
+                            </div>
+                          </div>
+                          <div className='flex gap-2 ml-[3rem] w-[111%] my-3'>
+                          {replyingToCommentId !== reply.id && (
+                            <>
+                              <div className='hover:bg-gray-200 px-2 py-1 rounded-lg'><CommentReactIcon /></div>
+                              <button
+                                className='hover:bg-gray-200 flex gap-1 px-2 py-1 rounded-lg items-center'
+                                onClick={() => handleReplyClick(reply.id)}
+                              >
+                                <ReplyIcon /> Reply
+                              </button>
+                            </>
+                          )}
+                          {replyingToCommentId === reply.id && (
+                            <CommentBox key={reply.id} id={id}  parentId={reply.id} onDismiss={() => setReplyingToCommentId(null)} />
+                          )}
+                        </div>
+                        </>
+                        ))}
+                       
+                      </div>
+                    )}
                   </div>
                 ))}
-
               </div>
+
             </div>
           </div>
         </div>
