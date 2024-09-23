@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import "~/styles/globals.css";
 import { SessionProvider } from 'next-auth/react';
 import { GeistSans } from "geist/font/sans";
-import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 
 // export const metadata: Metadata = {
@@ -16,9 +15,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>DuyThinhTBlogging</title>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body>
-      <SessionProvider>
+        <SessionProvider>
           <TRPCReactProvider>
             {children}
           </TRPCReactProvider>
