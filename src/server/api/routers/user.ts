@@ -5,6 +5,21 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+const updateUserSchema = z.object({
+  id: z.string(), 
+  userName: z.string().optional(),
+  website : z.string().optional(),
+  location : z.string().optional(),
+  bio: z.string().optional(),
+  currentlyLearning: z.string().optional(),
+  availableFor: z.string().optional(),
+  skills: z.string().optional(),
+  currentlyHacking: z.string().optional(),
+  pronouns: z.string().optional(),
+  work: z.string().optional(),
+  education: z.string().optional(),
+  brandColor: z.string().default("#000000"), 
+});
 
 export const userRouter = createTRPCRouter({
     getUserById: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -25,4 +40,27 @@ export const userRouter = createTRPCRouter({
   
       return user;
     }),
+
+    updateUser: protectedProcedure
+  .input(updateUserSchema)
+  .mutation(async ({ ctx, input }) => {
+    const updatedUser = await ctx.db.user.update({
+      where: { id: input.id },
+      data: {
+        userName: input.userName,
+        website: input.website,
+        location: input.location,
+        bio: input.bio,
+        currentlyLearning: input.currentlyLearning,
+        availableFor: input.availableFor,
+        skills: input.skills,
+        currentlyHacking: input.currentlyHacking,
+        pronouns: input.pronouns,
+        work: input.work,
+        education: input.education,
+        brandColor: input.brandColor,
+      },
+    });
+    return updatedUser; 
+  }),
   });

@@ -48,9 +48,16 @@ export default function UserDashBoard() {
                               Create Post
                         </button>
                         </Link>
+
+                      <Link href={`/settings/${session.user.id}`} className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+                          <button>
+                              Settings
+                        </button>
+                      </Link>
+
                     <hr className='border-gray-300 flex-grow w-full'/>
                         <LogOutButton></LogOutButton>
-
+                    
         </div>
       )}
     </div>

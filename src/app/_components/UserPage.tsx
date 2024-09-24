@@ -6,6 +6,9 @@ import { BiLogoGmail } from 'react-icons/bi';
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { FaRegComment } from "react-icons/fa";
 import Link from 'next/link';
+import BirthdayCakeIcon from './IconFolder/BirthdayCakeIcon';
+import WebsiteIcon from './IconFolder/websiteIcon';
+import EmailIcon from './IconFolder/EmailIcon';
 
 export default function UserPage({id} : {id: string}) {
     const {data : session} = useSession();
@@ -31,11 +34,18 @@ export default function UserPage({id} : {id: string}) {
                             {user?.name}
                         </div>
                         <div className='text-black text-xl'>
-                            404 bio not found
-                        </div>
-                        <div className='flex justify-center space-between text-neutral-400 text-md'>
-                            {<BiLogoGmail className='mx-2'/>}  {user?.email}
-                        </div>
+                            {user?.bio ?? '404 bio not found'}
+                        </div> 
+                    </div>
+                    <div className='flex justify-around w-[80%] gap-3  text-neutral-400 text-md my-7'>
+                        <div className='flex gap-1 px-3 py-2 '><BirthdayCakeIcon/>Joined on 29 Sep 2023</div>
+                            <div className='flex gap-1 px-3 py-2 '><EmailIcon/>  {user?.email}</div>
+                            <div className='flex gap-1 px-3 py-2 '><WebsiteIcon/>{user?.website ?? 'https//examplewebsite'}</div>
+                    </div>
+                    <hr className='border-[1px] border-gray-100 w-full mb-7' />
+                    <div className='flex flex-col justify-center gap-3'>
+                        <span className='text-xl text-gray-500'>Pronouns</span>
+                        <div>{user?.pronouns ?? 'Thomas'}</div>
                     </div>
                 </div>
                 <div className='flex'>
