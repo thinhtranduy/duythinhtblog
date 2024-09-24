@@ -49,7 +49,7 @@ export const postRouter = createTRPCRouter({
     let coverImageUrl: string | null = null;
 
       if (coverImageBase64 && coverImageName && coverImageType) {
-        const coverImageBuffer = Buffer.from(coverImageBase64, 'base64'); // Decode base64 to buffer
+        const coverImageBuffer = Buffer.from(coverImageBase64, 'base64'); 
         const uploadParams = {
           Bucket:process.env.BUCKET_NAME,
           Key: `uploads/${coverImageName}`,

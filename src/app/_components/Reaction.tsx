@@ -1,10 +1,12 @@
 import React from 'react'
 type ReactionProps = {
-  reacted: number
+  reacted: Record<string, number>;
 };
 export default function Reaction({ reacted }: ReactionProps) {
+  const totalReactedCount = Object.values(reacted).reduce((sum, count) => sum + count, 0);
 
-  if (reacted > 0) {
+
+  if (totalReactedCount > 0) {
     return (
       <img
         src="/heart-plus-active-9ea3b22f2bc311281db911d416166c5f430636e76b15cd5df6b3b841d830eefa.svg"

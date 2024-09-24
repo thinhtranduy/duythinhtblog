@@ -37,11 +37,12 @@ export default function PostDisplay({ id }: { id: number }) {
         setReplyingToCommentId(commentId);
     }
 };
+const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
+
   const { data: commentPost, refetch } = api.comment.getComments.useQuery({ postId: id })
   const totalCountComment = commentPost?.length;
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
-  const {data : reacted} = api.reaction.getReactionCountsForUser.useQuery({postId: id, userId :  user?.id})
-  const totalReactedCount = reacted ? reacted.reduce((sum, r) => sum + r.count, 0) : 0;
+  const { data: countReacted } = api.reaction.getReactionCountsForUser.useQuery({ postId: id, userId: user?.id });
 
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {
@@ -52,10 +53,28 @@ export default function PostDisplay({ id }: { id: number }) {
         }
         return acc;
       }, {});
-
+  
       setCounts(initialCounts);
     }
   }, [reactionCounts]);
+  useEffect(() => {
+    if (countReacted) {
+      const userReactions = countReacted.map(reaction => ({
+        emoji: reaction.emoji,
+        count: 1 
+      }));
+      
+      setReacted(userReactions);
+  
+      
+      userReactions.forEach(reaction => {
+        setCounts(prevCounts => ({
+          ...prevCounts,
+          [reaction.emoji]: (prevCounts[reaction.emoji] ?? 0) + 1
+        }));
+      });
+    }
+  }, [countReacted]);
   const { data: post } = api.post.getByID.useQuery({ id });
   const { data: author } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined };
   const relevantPosts = author?.posts;
@@ -71,6 +90,7 @@ export default function PostDisplay({ id }: { id: number }) {
 
     const tooltipRef = useRef<HTMLDivElement>(null);
     const { mutate: saveReaction } = api.reaction.saveReaction.useMutation();
+    const {mutate : removeReaction}= api.reaction.removeReaction.useMutation();
 
 
     const handleMouseEnter = () => {
@@ -88,36 +108,63 @@ export default function PostDisplay({ id }: { id: number }) {
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }, []);
+
+    
     const handleEmojiClick = (name: string) => {
-      const newCount = counts[name] === 1 ? 0 : 1;
-
-      setCounts((prevCounts) => ({
-        ...prevCounts,
-        [name]: newCount,
-      }));
-
-      saveReaction({ postId: id, emoji: name }, {
-        onError: (error) => {
-          console.error("Error saving reaction:", error);
-        },
-      });
+      const initialCount = reactionCounts?.find(reaction => reaction.emoji === name)?.count ?? 0; 
+      const currentCount = counts[name] ?? 0;
+    
+      const hasReacted = reacted.some(reaction => reaction.emoji === name); 
+    
+      let newCount: number;
+    
+      if (!hasReacted) {
+        newCount = currentCount + 1; 
+        setCounts(prevCounts => ({
+          ...prevCounts,
+          [name]: newCount,
+        }));
+    
+        
+        saveReaction({ postId: id, emoji: name }, {
+          onError: (error) => {
+            console.error("Error saving reaction:", error);
+          },
+        });
+    
+        
+        setReacted(prevReacted => [...prevReacted, { emoji: name, count: 1 }]);
+      } else {
+        newCount = currentCount > 0 ? currentCount - 1 : initialCount; 
+        setCounts(prevCounts => ({
+          ...prevCounts,
+          [name]: newCount,
+        }));
+    
+        removeReaction({ postId: id, emoji: name }, {
+          onError: (error) => {
+            console.error("Error removing reaction:", error);
+          },
+        });
+    
+        const updatedReacted = reacted.filter(reaction => reaction.emoji !== name);
+        setReacted(updatedReacted);
+      }
     };
+    
     return (
-      <div className="relative group"
-        onMouseEnter={handleMouseEnter}
-        ref={tooltipRef}
-      >
+      <div className="relative group" onMouseEnter={handleMouseEnter} ref={tooltipRef}>
         {children}
         {isVisible && (
-          <div className=" absolute left-0  translate-x-[23rem] -translate-y-5 flex flex-row bg-white border border-gray-300 shadow-lg py-6 rounded-3xl whitespace-nowrap">
+          <div className="absolute left-0 translate-x-[23rem] -translate-y-5 flex flex-row bg-white border border-gray-300 shadow-lg py-6 rounded-3xl whitespace-nowrap">
             {Object.entries(emojis).map(([name, src]) => (
               <div key={name} className="flex flex-col items-center mx-2 p-1 hover:bg-gray-200 rounded-2xl transition">
-                <img key={name} src={src} alt={name} onClick={() => handleEmojiClick(name)} className="h-10 w-10 cursor-pointer" />
-                <span className="ml-1">{counts[name]}</span>
+                <img src={src} alt={name} onClick={() => handleEmojiClick(name)} className="h-10 w-10 cursor-pointer" />
+                <span className="ml-1">{counts[name] ?? 0}</span>
               </div>
             ))}
-
-          </div>)}
+          </div>
+        )}
       </div>
     );
   };
@@ -130,7 +177,7 @@ export default function PostDisplay({ id }: { id: number }) {
           <div className='mb-10 w-full'>
             <Tooltip emojis={emojiMap}>
               <div className="flex items-center justify-end">
-                <Reaction reacted={totalReactedCount} />
+                <Reaction reacted={counts} />
               </div>
             </Tooltip>
           </div>
