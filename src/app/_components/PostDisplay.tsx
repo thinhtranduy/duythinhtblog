@@ -43,7 +43,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
   const totalCountComment = commentPost?.length;
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
   const { data: countReacted } = api.reaction.getReactionCountsForUser.useQuery({ postId: id, userId: user?.id });
-
+  console.log(reactionCounts)
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {
     if (reactionCounts) {
@@ -57,20 +57,22 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
       setCounts(initialCounts);
     }
   }, [reactionCounts]);
+
+  console.log("Counts for emoji: ",counts)
+
   useEffect(() => {
     if (countReacted) {
       const userReactions = countReacted.map(reaction => ({
         emoji: reaction.emoji,
-        count: 1 
+        count: reaction.count
       }));
       
       setReacted(userReactions);
-  
       
       userReactions.forEach(reaction => {
         setCounts(prevCounts => ({
           ...prevCounts,
-          [reaction.emoji]: (prevCounts[reaction.emoji] ?? 0) + 1
+          [reaction.emoji]: (prevCounts[reaction.emoji] ?? 0)
         }));
       });
     }
@@ -112,7 +114,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
 
     const handleEmojiClick = (name: string) => {
       const initialCount = reactionCounts?.find(reaction => reaction.emoji === name)?.count ?? 0; 
-      const currentCount = counts[name] ?? initialCount; 
+      const currentCount = initialCount; 
     
       const hasReacted = reacted.some(reaction => reaction.emoji === name); 
     

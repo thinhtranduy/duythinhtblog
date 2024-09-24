@@ -75,7 +75,6 @@ export const reactionRouter = createTRPCRouter({
       });
 
       if (existingReaction) {
-        // If the reaction exists, delete it
         await db.reaction.delete({
           where: {
             id: existingReaction.id,
