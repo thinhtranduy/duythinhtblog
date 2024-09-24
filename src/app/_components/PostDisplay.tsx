@@ -109,33 +109,29 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
       };
     }, []);
 
-    
+
     const handleEmojiClick = (name: string) => {
       const initialCount = reactionCounts?.find(reaction => reaction.emoji === name)?.count ?? 0; 
-      const currentCount = counts[name] ?? 0;
+      const currentCount = counts[name] ?? initialCount; 
     
       const hasReacted = reacted.some(reaction => reaction.emoji === name); 
     
-      let newCount: number;
-    
       if (!hasReacted) {
-        newCount = currentCount + 1; 
+        const newCount = currentCount + 1; 
         setCounts(prevCounts => ({
           ...prevCounts,
           [name]: newCount,
         }));
     
-        
         saveReaction({ postId: id, emoji: name }, {
           onError: (error) => {
             console.error("Error saving reaction:", error);
           },
         });
     
-        
-        setReacted(prevReacted => [...prevReacted, { emoji: name, count: 1 }]);
+        setReacted(prevReacted => [...prevReacted, { emoji: name, count: 1 }]); 
       } else {
-        newCount = currentCount > 0 ? currentCount - 1 : initialCount; 
+        const newCount = currentCount > 0 ? currentCount - 1 : initialCount; 
         setCounts(prevCounts => ({
           ...prevCounts,
           [name]: newCount,
@@ -151,6 +147,8 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
         setReacted(updatedReacted);
       }
     };
+    
+    
     
     return (
       <div className="relative group" onMouseEnter={handleMouseEnter} ref={tooltipRef}>
