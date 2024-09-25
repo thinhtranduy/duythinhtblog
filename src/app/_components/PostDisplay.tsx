@@ -333,13 +333,13 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
         </div>
         <div className='flex flex-col gap-4 flex-1'>
           <div className='flex flex-col bg-white mt-5 rounded-lg h-[500px] border border-gray-300'>
-            <div className='bg-green-700 h-[7%] rounded-t-lg' />
+            <div  style={{ backgroundColor: author?.brandColor ?? '#000000' }} className=' h-[7%] rounded-t-lg' />
             <div className='flex gap-3 items-center -translate-y-6 mx-5'>
               <Link
-                href={`/user/${user?.id}`}>
-                {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-14 h-14' />}
+                href={`/user/${author?.id}`}>
+                {author?.image && <img src={author.image} alt="author Image" className='rounded-full w-14 h-14' />}
               </Link>
-              <span className='font-bold text-xl translate-y-4 hover:text-[#2f3ea8]'>{user?.name}</span>
+              <span className='font-bold text-xl translate-y-4 hover:text-[#2f3ea8]'>{author?.name}</span>
             </div>
             <div className='w-[90%] mx-auto'>
               <button className=' w-full bg-[#3b49df] text-white px-5 py-2 rounded-md hover:bg-[#2f3ea8] hover:rounded-md'>Follow</button>
@@ -350,7 +350,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
 
           </div>
           <div className='flex flex-col bg-white mt-3 h-fit pb-10 rounded-lg'>
-            <span className='text-2xl mt-3 mx-5 mb-3'>More from <span className='text-2xl text-[#3b49df] hover:text-[#2f3ea8]'>{user?.name}</span> </span>
+            <span className='text-2xl mt-3 mx-5 mb-3'>More from <span className='text-2xl text-[#3b49df] hover:text-[#2f3ea8]'>{author?.name}</span> </span>
 
             {relevantPosts?.map(post => (
               <Link key={post.id} href={`/posts/${post.id}`}>
