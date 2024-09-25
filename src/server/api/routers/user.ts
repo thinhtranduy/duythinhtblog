@@ -19,6 +19,7 @@ const updateUserSchema = z.object({
   work: z.string().optional(),
   education: z.string().optional(),
   brandColor: z.string().default("#000000"), 
+  profileImage : z.string().optional()
 });
 
 export const userRouter = createTRPCRouter({
@@ -30,7 +31,8 @@ export const userRouter = createTRPCRouter({
             orderBy: {
               createdAt: 'desc'
             }
-          }
+          },
+          comments: true
         }, 
       });
   
@@ -59,6 +61,7 @@ export const userRouter = createTRPCRouter({
         work: input.work,
         education: input.education,
         brandColor: input.brandColor,
+        image: input.profileImage, 
       },
     });
     return updatedUser; 

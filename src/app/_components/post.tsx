@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { api } from '~/trpc/react';
 import { Post as PrismaPost } from '@prisma/client';
 import { PostTag } from '@prisma/client';
@@ -28,7 +28,6 @@ const emojiMap = {
 };
 
 export default function Post({ post, tag }: PostProps) {
-
   const { data: user, isLoading: userLoading } = post ? api.user.getUserById.useQuery(post.createdById) : { data: undefined, isLoading: false };
     const { data: commentPost, isLoading: commentLoading } = api.comment.getComments.useQuery({ postId: post.id });
   const totalCountComment = commentPost?.length;
@@ -38,12 +37,14 @@ export default function Post({ post, tag }: PostProps) {
   const { data: emojiCounts, isLoading: emojiLoading } = api.reaction.getReactionCounts.useQuery({ postId: post.id });
   const totalCount = emojiCounts?.reduce((acc, { count }) => acc + count, 0) ?? 0;
   const readTime = calculateReadTime(post.content);
+ console.log(post.image);
+  
 
   return (
     <div className='w-full mx-auto bg-white rounded-lg border border-gray-200 mb-3'>
       <Link href={`/posts/${post.id}`}>
         <div>
-          {post?.image ? (
+          {post.image ? (
             <img src={post.image} alt={post.title} className="h-[360px] w-full rounded-t-lg" />
           ) : (
             <div className='pt-3'></div>
@@ -90,8 +91,8 @@ export default function Post({ post, tag }: PostProps) {
             ))
           )}
         </div>
-        <div className='flex justify-between mx-16 mb-4'>
-          <div className='flex w-fit px-1 py-2'>
+        <div className='flex justify-between items-center ml-16 mr-4 mb-4'>
+          <div className='flex w-fit px-1 py-2 items-center justify-start text-md'>
             {emojiLoading ? (
               <div className="h-7 w-7 bg-gray-300 rounded-full animate-pulse"></div>
             ) : (
@@ -106,13 +107,13 @@ export default function Post({ post, tag }: PostProps) {
                       />
                     </div>
                   ))}
-                  <div className='text-md font-light mx-3 inline-block whitespace-nowrap'>
+                  <div className='text-md font-light ml-3 inline-block whitespace-nowrap'>
                     {totalCount} Reaction{totalCount !== 1 ? 's' : ''}
                   </div>
                 </div>
               )
             )}
-            <div className='text-md font-light mx-10 mb-2 hover:bg-gray-100 rounded-lg px-4 py-1 flex items-center justify-start gap-2'>
+            <div className='text-md font-light mx-3 items-center text-center hover:bg-gray-100 rounded-lg px-4 py-1 flex justify-start gap-2'>
               <div>
                 <CommentIcon></CommentIcon>
               </div> 
@@ -129,7 +130,7 @@ export default function Post({ post, tag }: PostProps) {
               )}
             </div>
           </div>
-          <div className='flex gap-3 justify-center items-center text-sm font-light'>
+          <div className='flex gap-3 justify-center items-center text-sm text-gray-700 font-light'>
             <div className='inline-block whitespace-nowrap'>{readTime} min read</div>
             <BookMarkIcon></BookMarkIcon>
           </div>

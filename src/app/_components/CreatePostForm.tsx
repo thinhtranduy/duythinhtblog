@@ -14,6 +14,11 @@ import Code from '@tiptap/extension-code';
 import { BiBold, BiItalic, BiLink, BiListUl, BiListOl, BiHeading, BiCode, BiSolidQuoteAltLeft } from 'react-icons/bi';
 import 'react-bootstrap-tagsinput/dist/index.css'
 import InputTags from './Tags';
+import {generatePresignedUrl } from '../helper';
+import { FaUpload } from 'react-icons/fa6';
+import FileUploadIcon from './IconFolder/FileUploadIcon';
+import Image from '@tiptap/extension-image';
+
 
 interface CreatePostProps {
   isPreview: boolean;
@@ -25,15 +30,15 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<string | undefined>(undefined);
+
   const [file, setFile] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState(null);
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const editor = useEditor({
     extensions: [
-      StarterKit,Link, OrderedList, BulletList, Blockquote, Code,
+      StarterKit,Link, OrderedList, BulletList, Blockquote, Code,Image,
       Blockquote.configure({
         HTMLAttributes: {
           class: 'my-custom-class',
@@ -60,40 +65,93 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
         class: `w-full min-h-[600px] prose prose-2xl list-disc prose-li:marker:text-black bg-white !outline-none p-6 ${isPreview ? "cursor-default" : ""}`,
       },
     },
+    
   });
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+        try {
+            const presignedUrl = await generatePresignedUrl(file.name, file.type);
+
+            const response = await fetch(presignedUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': file.type,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload file to S3');
+            }
+
+            editor?.chain().focus().setImage({ src: `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${file.name}` }).run();
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    }
+};
+
+  const handleIconClick = () => {
+    fileInputRef.current?.click();
+  };
   const createPostMutation = api.post.create.useMutation();
 
-  const handleSubmit = async (event: React.FormEvent) => {
 
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-    try {
-      let coverImageBase64: string | undefined;
-      let coverImageName: string | undefined;
-      let coverImageType: string | undefined;
   
-      if (file) {
-        const fileBuffer = await file.arrayBuffer();
-        coverImageBase64 = Buffer.from(fileBuffer).toString('base64');
-        coverImageName = file.name;
-        coverImageType = file.type;
+    try {
+      if (!file) {
+        console.error('No file selected');
+        setIsLoading(false);
+        return;
       }
   
-      const response = await createPostMutation.mutateAsync({
+      const coverImageName = encodeURIComponent(file.name);
+      const coverImageType = file.type;
+  
+      console.log('Generating presigned URL for:', coverImageName, 'with type:', coverImageType);
+      const presignedUrl = await generatePresignedUrl(coverImageName, coverImageType);
+      console.log('Presigned URL generated:', presignedUrl);
+  
+      const response = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        
+        headers: {
+          'Content-Type': coverImageType,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Failed to upload file: ${errorMessage}`);
+      }
+  
+      console.log('Image uploaded successfully:', presignedUrl);
+      
+      const createPostResponse = await createPostMutation.mutateAsync({
         title,
         content,
-        coverImageBase64,
-        coverImageName,
-        coverImageType,
+        coverImageUrl: `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${coverImageName}`,
         tags,
       });
-    router.push('/success');
+      console.log('Post creation response:', createPostResponse);
+      router.push('/success');
+  
     } catch (error) {
-      console.error('Post creation failed:', error);
+      console.error('Error in upload process:', error);
+      alert('Failed to upload file. Please check the console for more details.');
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -109,6 +167,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
       setFile(undefined);
     }
   };
+
 
   const handleRemove = () => {
     if (imageFile) {
@@ -218,6 +277,21 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
               <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleCode().run()}>
                 <BiCode  className='text-3xl'/>
               </button>
+              <button
+        type="button"
+        onClick={handleIconClick}
+        className="flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]"
+      >
+        <FileUploadIcon />
+      </button>
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden" 
+      />
+
             </div>
         </div>)}
         <div className='mx-16 tiptap-editor-one'>
@@ -225,6 +299,7 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
             editor={editor} 
           />
         </div>
+
       </form>
     <div className='mt-3'>
         <button

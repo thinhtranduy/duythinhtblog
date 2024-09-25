@@ -5,6 +5,13 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+    experimental: {
+        serverComponentsExternalPackages: [
+          '@aws-sdk/client-s3',
+          '@aws-sdk/s3-request-presigner',
+        ],
+      },
+};
 
 export default config;

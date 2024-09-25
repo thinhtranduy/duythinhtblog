@@ -17,6 +17,7 @@ import { api } from '~/trpc/react'
 import { useState } from 'react';
 import { z } from "zod";
 import { useForm } from 'react-hook-form';
+import { generatePresignedUrl } from '~/app/helper'
 
 
 const updateUserSchema = z.object({
@@ -33,32 +34,36 @@ const updateUserSchema = z.object({
   work: z.string().optional(),
   education: z.string().optional(),
   brandColor: z.string().default("#000000"), 
+  profileImage : z.string().optional()
 });
 interface UserProfileProps{
   params: {
     id: string 
   }
 }
+
 export default function ProfilePage(props : UserProfileProps) {
   const { register, handleSubmit } = useForm<UpdateUserInput>();
-
+  
   const {data : user, refetch} = api.user.getUserById.useQuery(props.params.id)
   const [formData, setFormData] = useState({
     username: user?.name ?? '',
-    website: '',
-    location: '',
-    bio: '',
-    currentlyLearning: '',
-    availableFor: '',
-    skills: '',
-    currentlyHacking: '',
-    pronouns: '',
-    work : '',
-    education: '',
-    brandColor: '#000000'
+    website: user?.website ?? '',
+    location: user?.location ?? '',
+    bio: user?.bio ?? '',
+    currentlyLearning: user?.currentlyLearning ?? '',
+    availableFor: user?.availableFor ?? '',
+    skills:  user?.skills ?? '',
+    currentlyHacking: user?.currentlyHacking ?? '',
+    pronouns: user?.pronouns ?? '',
+    work : user?.work ?? '',
+    education: user?.education ?? '',
+    brandColor: '#000000',
+    profileImage: user?.image ?? '',
   });
 
 
+ 
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,15 +76,43 @@ export default function ProfilePage(props : UserProfileProps) {
   };
 
   type UpdateUserInput = z.infer<typeof updateUserSchema>;
+  // const { mutate: updateUser } = api.user.updateUser.useMutation({
+  //   onSuccess: (data) => {
+  //     console.log("User updated successfully:", data);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Error updating user:", error);
+  //   },
+  // });
+  
+  // const onSubmit = (data: UpdateUserInput) => {
+  //   setLoading(true); 
+  
+  //   const updatedData = {
+  //     ...formData,
+  //     ...data,
+  //     id: props.params.id,
+  //     profileImage: (formData.profileImage as string) ?? user?.image,
+  //   };
+  
+  //   updateUser(updatedData);
+  
+  //   setLoading(false);
+  // };
   const { mutate: updateUser } = api.user.updateUser.useMutation({
     onSuccess: (data) => {
       console.log("User updated successfully:", data);
+      setLoading(false); 
     },
     onError: (error) => {
       console.error("Error updating user:", error);
+      setLoading(false); 
+    },
+    onSettled: () => {
+      setLoading(false);
     },
   });
-  
+
   const onSubmit = (data: UpdateUserInput) => {
     setLoading(true); 
   
@@ -87,13 +120,43 @@ export default function ProfilePage(props : UserProfileProps) {
       ...formData,
       ...data,
       id: props.params.id,
-    };
+      profileImage: formData.profileImage ?? user?.image,
+      };
   
-    updateUser(updatedData);
-  
-    setLoading(false);
+    updateUser(updatedData); 
   };
+
   
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+        try {
+            const presignedUrl = await generatePresignedUrl(file.name, file.type);
+
+            const response = await fetch(presignedUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': file.type,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to upload file to S3');
+            }
+
+            const fileUrl = `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${file.name}`
+            setFormData((prevData) => ({
+                ...prevData,
+                profileImage: fileUrl ?? user?.image,
+            }));
+
+            console.log("File uploaded successfully:", fileUrl);
+        } catch (error) {
+            console.error("Error uploading file:", error);
+        }
+    }
+};
 
 
   return (
@@ -144,12 +207,11 @@ export default function ProfilePage(props : UserProfileProps) {
                 <div className='flex gap-2 justify-start items-center mb-10'>
                   {user?.image && <img src={user?.image} alt="User Image" className='rounded-full w-14 h-14' />}
                   <input
-                          type="file"
-                          id="file-upload"
-                          className=" border border-gray-300 px-4 py-4 w-full"
-                          // value={formData.username}
-                          // onChange={handleInputChange}
-                        />
+                      type="file"
+                      id="file-upload"
+                      className="border border-gray-300 px-4 py-4 w-full"
+                      onChange={handleFileUpload}
+                  />
                 </div>
                 </div>
             </div>
