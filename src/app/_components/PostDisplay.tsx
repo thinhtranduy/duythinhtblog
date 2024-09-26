@@ -10,6 +10,7 @@ import BookMarkIcon from './IconFolder/BookMarkIcon';
 import CommentReactIcon from './IconFolder/CommentReactIcon';
 import ReplyIcon from './IconFolder/ReplyIcon';
 import CommentBox from './CommentBox';
+import MenuBar from './MenuBar';
 
 interface TooltipProps {
   children: ReactNode;
@@ -169,9 +170,17 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
     );
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar onMenuToggle={handleMenuToggle}  ></NavBar>
+      <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          <MenuBar />
+        </div>
       <div className='w-full md:w-[90%] flex gap-5'>
         <div className='hidden md:flex w-[14%] mt-20 flex-col items-end relative'>
           <div className='mb-10 w-full'>

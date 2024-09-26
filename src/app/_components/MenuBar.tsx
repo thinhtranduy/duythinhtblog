@@ -50,8 +50,8 @@ const MenuBar = () => {
             <MenuButton> {<img src='/menu_ic_soft_comparsion.svg' className='h-6 w-6 mr-1'/>}Software Comparisons</MenuButton>
         </div>
 
-        <div className='pb-5'>
-            <span className='font-bold text-xl text-black '>Other</span>
+        <div className='py-5'>
+            <span className='font-semibold text-md text-black '>Other</span>
         </div>
 
         <div className='pb-10'>

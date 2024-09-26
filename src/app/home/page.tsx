@@ -8,9 +8,16 @@ import { api } from '~/trpc/react';
 import Post from '../_components/post';
 import MenuBar from '../_components/MenuBar';
 import DiscussionPost from '../_components/Discussion';
-
+interface NavBarProps {
+  onMenuToggle: () => void; 
+}
 export default function HomePage() {
   const { data: session } = useSession();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
 
   const SkeletonPost = () => (
     <div className="animate-pulse w-full mx-auto bg-white rounded-lg border border-gray-200 mb-3">
@@ -39,9 +46,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-neutral-100">
-      <NavBar />
+      <NavBar onMenuToggle={handleMenuToggle} />
       <div className='w-full md:w-[80%] mx-auto flex gap-3'>
-        <div className=' hidden md:block md:w-[18%] mt-3'>
+      <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          <MenuBar />
+        </div>
+        <div className={`hidden md:block md:w-[18%] mt-3`}>
           <MenuBar />
         </div>
         <div className="w-full md:w-[53%] md:flex flex-col">

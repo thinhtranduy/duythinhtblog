@@ -159,9 +159,14 @@ export default function ProfilePage(props : UserProfileProps) {
 };
 
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar onMenuToggle={handleMenuToggle}></NavBar>
       <form onSubmit={handleSubmit(onSubmit)} className='w-[55%] mx-auto h-full flex mt-7 gap-5 '>
           <div className='flex flex-col w-[25%] h-fit'>
             <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ProfileIcon/> Profile</button>

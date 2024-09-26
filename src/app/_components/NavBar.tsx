@@ -9,8 +9,12 @@ import Notifications from './IconFolder/Notifications';
 import { api } from '~/trpc/react';
 import { Post } from '@prisma/client';
 import SearchIcon from './IconFolder/SearchIcon';
+import { CiMenuBurger } from "react-icons/ci";
+interface NavBarProps {
+  onMenuToggle: () => void; 
+}
+const NavBar: React.FC<NavBarProps> = ({ onMenuToggle }) => {
 
-const NavBar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const [results, setResults] = useState<Post[]>([]);
@@ -82,6 +86,7 @@ const NavBar = () => {
     <div className='sticky left-0 top-0 mx-auto h-fit bg-white border border-gray-200 z-50'>
       <div className='flex justify-around mx-auto py-2 h-fit'>
         <div className='w-[50%] h-fit flex justify-start gap-4'>
+          <div className='flex items-center md:hidden'  onClick={onMenuToggle}><CiMenuBurger/></div>
           <LogoButton />
           <div className='relative w-[80%]  border border-gray-400 rounded-lg flex justify-start object-contain hover:border-[#3b49df] focus-within:border-[#3b49df]'>
             <button className='px-1 h-full hover:bg-[#3b49df] hover:opacity-20 hover:rounded-lg'>
