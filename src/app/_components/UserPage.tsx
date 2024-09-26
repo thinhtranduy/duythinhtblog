@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { api } from '~/trpc/react';
 import NavBar from './NavBar';
 import { BiLogoGmail } from 'react-icons/bi';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import BirthdayCakeIcon from './IconFolder/BirthdayCakeIcon';
 import WebsiteIcon from './IconFolder/websiteIcon';
 import EmailIcon from './IconFolder/EmailIcon';
+import MenuBar from './MenuBar';
 
 export default function UserPage({ id }: { id: string }) {
     const Skeleton = ({ className }: { className?: string }) => (
@@ -19,9 +20,16 @@ export default function UserPage({ id }: { id: string }) {
 
     const posts = user?.posts;
 
+    const [menuOpen, setMenuOpen] = useState(false);
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
     return (
         <div>
-            <NavBar />
+            <NavBar onMenuToggle={handleMenuToggle} />
+            <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          <MenuBar />
+        </div>
             <div className='w-screen h-[150px] bg-black pt-5'>
                 <div className='flex flex-col mx-auto gap-5'>
                     <div className='relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[-3rem] bg-white w-[60%] flex flex-col gap-0 items-center justify-between rounded-lg border border-gray-200 z-0'>

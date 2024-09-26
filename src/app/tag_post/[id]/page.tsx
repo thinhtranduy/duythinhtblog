@@ -6,6 +6,7 @@ import { api } from '~/trpc/react';
 import CreatePostButton from '~/app/_components/CreatePostButton';
 import Link from 'next/link';
 import Post from '~/app/_components/post';
+import MenuBar from '~/app/_components/MenuBar';
 
 
 export default function TagPage({ params }: { params: { id: string } }) {
@@ -14,9 +15,18 @@ export default function TagPage({ params }: { params: { id: string } }) {
     const [activeButton, setActiveButton] = useState('Relevant');
     const { data: posts} =  api.post.getPostsByTag.useQuery({tagId: parseInt(tagID)})
 
+    const [menuOpen, setMenuOpen] = useState(false);
+    const handleMenuToggle = () => {
+      setMenuOpen(prevState => !prevState);
+    };
   return (
     <div>
-    <NavBar />
+    <NavBar onMenuToggle={handleMenuToggle}></NavBar>
+        <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          <MenuBar />
+        </div>
+
+
     <div className='w-[80%] h-[200px] bg-white mx-auto mt-5 rounded-lg border border-gray-200 relative'>
         <div className='bg-[#3b2a5b] h-[10%] rounded-t-lg'></div> 
         <div className='flex flex-col mx-16 mt-10 text-black text-4xl'>

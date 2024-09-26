@@ -24,6 +24,11 @@ type ReactionCount = {
 export default function PostDisplay({ id }: { id: number }) {
   const { data: session } = useSession();
   const user = session?.user; 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
 
   const emojiMap = {
     sparkle_heart: '/sparkle-heart-5f9bee3767e18deb1bb725290cb151c25234768a0e9a2bd39370c382d02920cf.svg',
@@ -170,11 +175,6 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
     );
   };
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleMenuToggle = () => {
-    setMenuOpen(prevState => !prevState);
-  };
   return (
     <div>
       <NavBar onMenuToggle={handleMenuToggle}  ></NavBar>

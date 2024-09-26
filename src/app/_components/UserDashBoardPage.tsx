@@ -6,6 +6,7 @@ import { api } from '~/trpc/react';
 import DicussionPost from './Discussion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import MenuBar from './MenuBar';
 
 
 export default function UserDashBoardPage({ id }: { id: string }) {
@@ -41,9 +42,17 @@ export default function UserDashBoardPage({ id }: { id: string }) {
     }
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setMenuOpen(prevState => !prevState);
+  };
   return (
     <div>
-        <NavBar></NavBar>
+        <NavBar onMenuToggle={handleMenuToggle}></NavBar>
+        <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          <MenuBar />
+        </div>
         <div className='w-[80%] mx-auto mt-5'>
             <h1 className='py-4 text-4xl font-bold text-black mb-3'>Dashboard</h1>
             <div className='flex justify-start gap-5'>
