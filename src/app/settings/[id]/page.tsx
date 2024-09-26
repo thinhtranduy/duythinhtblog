@@ -163,23 +163,23 @@ export default function ProfilePage(props : UserProfileProps) {
     <div>
       <NavBar></NavBar>
       <form onSubmit={handleSubmit(onSubmit)} className='w-[55%] mx-auto h-full flex mt-7 gap-5 '>
-          <div className='flex flex-col w-[20%] h-fit'>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ProfileIcon/> Profile</button>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <Customizationicon/>Customization</button>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <NotificationsIcon/>Notifications</button>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><AccountIcon/>Account</button>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><OrganizationIcon/>Organization</button>
-            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ExtensionsIcon/>Extensions</button>
+          <div className='flex flex-col w-[25%] h-fit'>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ProfileIcon/> Profile</button>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <Customizationicon/>Customization</button>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <NotificationsIcon/>Notifications</button>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><AccountIcon/>Account</button>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><OrganizationIcon/>Organization</button>
+            <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ExtensionsIcon/>Extensions</button>
           </div>
           <div className='w-full flex flex-col '>
-              <Link href={`/user/${user?.id}`} className='text-[35px] text-blue-700 font-semibold my-1 mx-1 mb-5'>
+              <Link href={`/user/${user?.id}`} className='text-2xl text-blue-700 font-semibold my-1 mx-1 mb-5'>
                 @{user?.name}
               </Link>
               <div className='w-full text-white h-full bg-white gap-3 justify-center items-center flex flex-col rounded-lg border border-gray-300 '>
-                  <button className=' px-3 py-2 rounded-lg mt-7 w-[95%] mx-auto   flex gap-2 items-center justify-center text-xl bg-[#3b5998] hover:bg-opacity-95'><FacebookIcon/> Connect Facebook Account</button>
-                  <button className=' px-3 py-2 rounded-lg  mt-1 w-[95%]  mx-auto flex gap-2 items-center justify-center text-xl bg-green-800 hover:bg-opacity-95'><ForemIcon/> Connect Forem Account</button>
-                  <button className=' px-3 py-2 rounded-lg  mt-1 w-[95%]  mx-auto flex gap-2 items-center justify-center text-xl bg-[#24292e] hover:bg-opacity-95'> <GithubIcon/> Connect Github Account</button>
-                  <button className=' px-3 py-2 rounded-lg  mt-1 mb-7 w-[95%]  mx-auto flex gap-2 items-center justify-center text-xl bg-black hover:bg-opacity-95'><FaTwitter/> Connect Twitter (X) Account</button>
+                  <button className=' px-3 py-2 rounded-lg mt-7 w-[95%] mx-auto   flex gap-2 items-center justify-center text-md bg-[#3b5998] hover:bg-opacity-95'><FacebookIcon/> Connect Facebook Account</button>
+                  <button className=' px-3 py-2 rounded-lg  mt-1 w-[95%]  mx-auto flex gap-2 items-center justify-center text-md bg-green-800 hover:bg-opacity-95'><ForemIcon/> Connect Forem Account</button>
+                  <button className=' px-3 py-2 rounded-lg  mt-1 w-[95%]  mx-auto flex gap-2 items-center justify-center text-md bg-[#24292e] hover:bg-opacity-95'> <GithubIcon/> Connect Github Account</button>
+                  <button className=' px-3 py-2 rounded-lg  mt-1 mb-7 w-[95%]  mx-auto flex gap-2 items-center justify-center text-md bg-black hover:bg-opacity-95'><FaTwitter/> Connect Twitter (X) Account</button>
               </div>
 
             <div className='w-full text-white h-full bg-white justify-center  flex flex-col rounded-lg border border-gray-200 mt-5 gap-5 '>

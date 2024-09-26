@@ -20,7 +20,7 @@ export default function UserDashBoard() {
   return (
     <div className='relative inline-block'>
         <button onClick={toggleDashboard} className='rounded-full hover:border-2 hover:border-gray-400 hover:shadow hover:shadow-gray-200'>
-        {session.user.image && <img src={session.user.image} alt="User Image" className='rounded-full w-12 h-12'/>}
+        {session.user.image && <img src={session.user.image} alt="User Image" className='rounded-full w-8 h-8'/>}
       </button>
       {isDashboardVisible && (
         <div className='absolute top-full right-0 flex flex-col justify-start items-start w-64 mt-2 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2' style={{ zIndex: 9999 }}>

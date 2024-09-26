@@ -116,19 +116,19 @@ const CommentBox: React.FC<CommentBoxProps> = ({ id, parentId, onDismiss }) => {
             )}
             <button onClick={handleSubmit}
                 type="button"
-                className="mb-4 bg-[#3b49df] hover:bg-[#2f3ea8] text-white text-lg px-4 py-2 rounded-lg mt-2 mr-3"
+                className="mb-4 bg-[#3b49df] hover:bg-[#2f3ea8] text-white text-md px-4 py-2 rounded-lg mt-2 mr-3"
                 disabled={isSubmitting}
             >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
             <button
                 onClick={() => setIsPreview(!isPreview)}
-                className='mb-4 bg-neutral-300 hover:bg-neutral-400 text-lg text-black px-4 py-2 rounded-lg mt-2 mr-2'>
+                className='mb-4 bg-neutral-300 hover:bg-neutral-400 text-md text-black px-4 py-2 rounded-lg mt-2 mr-2'>
                 {isPreview ? 'Continue Editing' : 'Preview'}
             </button>
             <button
                 onClick={onDismiss}
-                className='mb-4 bg-white hover:bg-gray-200 text-lg text-black px-4 py-2 rounded-lg mt-2'>
+                className='mb-4 bg-white hover:bg-gray-200 text-md text-black px-4 py-2 rounded-lg mt-2'>
                 Dismiss
             </button>
         </div>

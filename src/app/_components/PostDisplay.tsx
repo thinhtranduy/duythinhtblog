@@ -156,10 +156,10 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
       <div className="relative group" onMouseEnter={handleMouseEnter} ref={tooltipRef}>
         {children}
         {isVisible && (
-          <div className="absolute left-0 translate-x-[23rem] -translate-y-5 flex flex-row bg-white border border-gray-300 shadow-lg py-6 rounded-3xl whitespace-nowrap">
+          <div className="absolute left-0 translate-x-[13rem] -translate-y-10 flex flex-row bg-white border border-gray-300 shadow-lg py-6 rounded-3xl whitespace-nowrap">
             {Object.entries(emojis).map(([name, src]) => (
               <div key={name} className="flex flex-col items-center mx-2 p-1 hover:bg-gray-200 rounded-2xl transition">
-                <img src={src} alt={name} onClick={() => handleEmojiClick(name)} className="h-10 w-10 cursor-pointer" />
+                <img src={src} alt={name} onClick={() => handleEmojiClick(name)} className="h-12 w-12 cursor-pointer" />
                 <span className="ml-1">{counts[name] ?? 0}</span>
               </div>
             ))}
@@ -172,8 +172,8 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
   return (
     <div>
       <NavBar></NavBar>
-      <div className='w-[90%] flex gap-5'>
-        <div className='w-[14%] mt-20 flex flex-col items-end relative'>
+      <div className='w-full md:w-[90%] flex gap-5'>
+        <div className='hidden md:flex w-[14%] mt-20 flex-col items-end relative'>
           <div className='mb-10 w-full'>
             <Tooltip emojis={emojiMap}>
               <div className="flex items-center justify-end">
@@ -182,11 +182,11 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
             </Tooltip>
           </div>
           <div className='mb-10'>
-            <CommentIcon />
+            <CommentIcon/>
           </div>
           <BookMarkIcon></BookMarkIcon>
         </div>
-        <div className="bg-white rounded-lg min-h-screen h-full w-[59%] mt-3 border border-neutral-200 ">
+        <div className="w-full md:w-[59%] bg-white rounded-lg min-h-screen h-full mt-3 border border-neutral-200 ">
           <div>
             {post?.image ? (
               <img src={post.image} alt={post.title} className="h-[420px] w-full rounded-t-lg mx-auto" />
@@ -243,7 +243,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
 
 
 
-              <div className='mt-5 gap-3 flex flex-col w-[85%]'>
+              <div className='mt-5 gap-3 flex flex-col w-[85.5%]'>
                 {commentPost?.map((comment) => (
                   <div key={comment.id} className='flex flex-col gap-1 mb-5'>
                     <div className='flex w-full gap-2'>
@@ -252,7 +252,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                       )}
                       <div className="border border-neutral-200 min-h-[100px] rounded-lg flex-1 flex flex-col">
                         <div className='flex gap-2 justify-start items-center mt-2'>
-                          <span className="ml-5 text-xl font-sans font-light">{comment.user?.name}</span>
+                          <span className="ml-5 text-md font-sans font-light">{comment.user?.name}</span>
                           <span className='text-sm text-gray-400 font-light'>•</span>
                           <div className='text-sm text-gray-400 font-light'>
                             {comment?.createdAt
@@ -260,10 +260,10 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                               : 'No date available'}
                           </div>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose mx-5 mt-5 text-2xl' />
+                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose mx-5 mt-5 text-xl' />
                       </div>
                     </div>
-                    <div className='flex gap-2 ml-[3rem] mt-2 w-[111%]'>
+                    <div className='flex gap-2 ml-[3rem] mt-2 w-[110.5%]'>
                       {replyingToCommentId !== comment.id && (
                         <>
                           <div className='hover:bg-gray-200 px-2 py-1 rounded-lg'><CommentReactIcon /></div>
@@ -331,32 +331,32 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
             </div>
           </div>
         </div>
-        <div className='flex flex-col gap-4 flex-1'>
-          <div className='flex flex-col bg-white mt-5 rounded-lg h-[500px] border border-gray-300'>
+        <div className=' hidden md:flex flex-col gap-4 flex-1'>
+          <div className='flex flex-col bg-white mt-3 rounded-lg h-[500px] border border-gray-300'>
             <div  style={{ backgroundColor: author?.brandColor ?? '#000000' }} className=' h-[7%] rounded-t-lg' />
             <div className='flex gap-3 items-center -translate-y-6 mx-5'>
               <Link
                 href={`/user/${author?.id}`}>
                 {author?.image && <img src={author.image} alt="author Image" className='rounded-full w-14 h-14' />}
               </Link>
-              <span className='font-bold text-xl translate-y-4 hover:text-[#2f3ea8]'>{author?.name}</span>
+              <span className='font-bold text-lg translate-y-4 hover:text-[#2f3ea8]'>{author?.name}</span>
             </div>
             <div className='w-[90%] mx-auto'>
               <button className=' w-full bg-[#3b49df] text-white px-5 py-2 rounded-md hover:bg-[#2f3ea8] hover:rounded-md'>Follow</button>
             </div>
-            <div className='mt-5 w-[90%] mx-auto text-lg text-black font-light'>
-              I am a Full-Stack Developer specialized Front-end Developer. Passionate about algorithms, data structures, and coding challenges & always ready to face new challenges.
+            <div className='mt-5 w-[90%] mx-auto text-sm text-black font-light'>
+            {author?.bio ?? 'askdbaks'}         
             </div>
 
           </div>
-          <div className='flex flex-col bg-white mt-3 h-fit pb-10 rounded-lg'>
-            <span className='text-2xl mt-3 mx-5 mb-3'>More from <span className='text-2xl text-[#3b49df] hover:text-[#2f3ea8]'>{author?.name}</span> </span>
+          <div className='flex flex-col bg-white mt-3 h-fit pb-3 rounded-lg'>
+            <span className='text-xl font-semibold mt-3 mx-5 mb-3'>More from <span className='text-xl text-[#3b49df] hover:text-[#2f3ea8]'>{author?.name}</span> </span>
 
             {relevantPosts?.map(post => (
               <Link key={post.id} href={`/posts/${post.id}`}>
                 <div className='flex flex-col gap-3'>
-                  <div className='border-t border-gray-100 py-4'>
-                    <p className='mx-5 text-start text-xl font-light hover:text-[#3b49df]'>{post?.title}</p>
+                  <div className='border-t border-gray-50 py-4'>
+                    <p className='mx-5 text-start text-md text-gray-500 hover:text-[#3b49df]'>{post?.title}</p>
                   </div>
                 </div>
               </Link>

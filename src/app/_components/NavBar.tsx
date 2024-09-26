@@ -8,6 +8,7 @@ import LogoButton from './LogoButton';
 import Notifications from './IconFolder/Notifications';
 import { api } from '~/trpc/react';
 import { Post } from '@prisma/client';
+import SearchIcon from './IconFolder/SearchIcon';
 
 const NavBar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -78,17 +79,17 @@ const NavBar = () => {
   }, []);
 
   return (
-    <div className='sticky left-0 top-0 mx-auto bg-white border border-gray-200 z-50'>
-      <div className='h-16 flex justify-around mx-auto pr-10 py-2'>
-        <div className='w-[50%] h-full flex justify-start gap-4'>
+    <div className='sticky left-0 top-0 mx-auto h-fit bg-white border border-gray-200 z-50'>
+      <div className='flex justify-around mx-auto py-2 h-fit'>
+        <div className='w-[50%] h-fit flex justify-start gap-4'>
           <LogoButton />
-          <div className='relative w-[80%] bg-none border border-gray-400 rounded-lg flex justify-start object-contain hover:border-[#3b49df] focus-within:border-[#3b49df]'>
-            <button className='px-3 h-full hover:bg-[#3b49df] hover:opacity-20 hover:rounded-lg'>
-              <FaSearch className='hover:forced-colors:blue' color="black" />
+          <div className='relative w-[80%]  border border-gray-400 rounded-lg flex justify-start object-contain hover:border-[#3b49df] focus-within:border-[#3b49df]'>
+            <button className='px-1 h-full hover:bg-[#3b49df] hover:opacity-20 hover:rounded-lg'>
+              <SearchIcon/>
             </button>
             <input
               ref={searchInputRef}
-              className='h-full w-full px-2 border-none rounded-lg text-lg placeholder-gray-500 font-light placeholder:text-xl text-black outline-none'
+              className='h-full w-full px-2 border-none rounded-lg text-lg placeholder-gray-500 font-light placeholder:text-md text-black outline-none'
               type="text"
               placeholder="Search..."
               onChange={handleChange}

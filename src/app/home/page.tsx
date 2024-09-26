@@ -38,29 +38,28 @@ export default function HomePage() {
   const [activeButton, setActiveButton] = useState('Relevant');
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0]">
+    <div className="min-h-screen bg-neutral-100">
       <NavBar />
-      <div className='w-[80%] mx-auto flex gap-4'>
-        <div className='w-[18%]'>
+      <div className='w-full md:w-[80%] mx-auto flex gap-3'>
+        <div className=' hidden md:block md:w-[18%] mt-3'>
           <MenuBar />
         </div>
-
-        <div className="w-[54%] flex flex-col">
-          <div className='flex justify-start gap-3 mb-3 my-3'>
+        <div className="w-full md:w-[53%] md:flex flex-col">
+          <div className='flex justify-start gap-3 mb-2 mt-5'>
             <button
-              className={`text-xl px-4 py-3 hover:bg-white hover:text-[#3b49df] rounded-md ${activeButton === 'Relevant' ? 'font-bold text-black' : 'text-black font-light'}`}
+              className={`text-lg px-[5px] py-1 hover:bg-white hover:text-[#3b49df] rounded-lg ${activeButton === 'Relevant' ? 'font-semibold text-gray-800' : 'text-gray-800 font-light'}`}
               onClick={() => setActiveButton('Relevant')}
             >
               Relevant
             </button>
             <button
-              className={`text-xl px-4 py-3 hover:bg-white hover:text-[#3b49df] rounded-md ${activeButton === 'Latest' ? 'font-bold text-black' : 'text-black font-light'}`}
+              className={`text-lg px-[5px] py-1 hover:bg-white hover:text-[#3b49df] rounded-lg ${activeButton === 'Latest' ? 'font-semibold text-gray-800' : 'text-gray-800 font-light'}`}
               onClick={() => setActiveButton('Latest')}
             >
               Latest
             </button>
             <button
-              className={`text-xl px-4 py-3 hover:bg-white hover:text-[#3b49df] rounded-md ${activeButton === 'Top' ? 'font-bold text-black' : 'text-black font-light'}`}
+              className={`text-lg px-[5px] py-1 hover:bg-white hover:text-[#3b49df] rounded-lg ${activeButton === 'Top' ? 'font-semibold text-gray-800' : 'text-gray-800 font-light'}`}
               onClick={() => setActiveButton('Top')}
             >
               Top
@@ -76,11 +75,11 @@ export default function HomePage() {
           )}
         </div>
 
-        <div className="h-fit flex-1 flex flex-col my-5 border bg-white border-gray-200 rounded-lg items-start justify-start">
-          <span className='text-2xl font-bold text-black py-4 ml-3'>
-            Active Discussions
+        <div className=" hidden md:flex flex-col h-fit flex-1 mt-3 border bg-white border-gray-200 rounded-lg items-start justify-start">
+          <span className='text-xl font-bold text-gray-800 mx-3 py-3'>
+            Active discussions
           </span>
-          <div>
+          <div className='mb-5'>
           {posts?.map(post => (
     <DiscussionPost key={post.id} post={post} />
   ))}

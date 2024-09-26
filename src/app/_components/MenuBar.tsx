@@ -24,7 +24,7 @@ interface MenuButtonProps {
 }
 const MenuButton: React.FC<MenuButtonProps> = ({ children }) => {
     return (
-      <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-xl font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
+      <button className='w-full h-full flex object-contain gap-1 text-neutral-800  font-light  text-items-start text-[16px] font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
         {children}
       </button>
     );
@@ -32,9 +32,9 @@ const MenuButton: React.FC<MenuButtonProps> = ({ children }) => {
 const MenuBar = () => {
   return (
     <div>
-        <div className='pb-10 mt-5'>
+        <div className=''>
             <MenuButton> {<HomeIcon/>}  Home</MenuButton>
-            <MenuButton> {<img src='/devpp.svg' className='h-6 w-6 mr-2'/>}  DEV++</MenuButton>
+            <MenuButton> {<img src='/devpp.svg' className='h-6 w-6 mr-1'/>}  DEV++</MenuButton>
             <MenuButton> {<ReadingListIcon/>}  Reading List</MenuButton>
             <MenuButton> {<PodcastIcon/>}Podcasts</MenuButton>
             <MenuButton> {< VideosIcon/>}Videos</MenuButton>
@@ -44,10 +44,10 @@ const MenuBar = () => {
             <MenuButton> {<Advertise/>}Advertise on DEV</MenuButton>
             <MenuButton> {<DevChallenge/>}DEV Challenges</MenuButton>
             <MenuButton> {<Showcase/>}DEV Showcases</MenuButton>
-            <MenuButton> {<img src='/Deviologo.png' className='h-6 w-6 mr-2'></img>}About</MenuButton>
+            <MenuButton> {<img src='/Deviologo.png' className='h-6 w-6 mr-1'></img>}About</MenuButton>
             <MenuButton> {<Contact/>}Contact</MenuButton>
-            <MenuButton> {<img src='/menu_ic_guides.svg' className='h-6 w-6 mr-2'/>}Guides</MenuButton>
-            <MenuButton> {<img src='/menu_ic_soft_comparsion.svg' className='h-6 w-6 mr-2'/>}Software Comparisons</MenuButton>
+            <MenuButton> {<img src='/menu_ic_guides.svg' className='h-6 w-6 mr-1'/>}Guides</MenuButton>
+            <MenuButton> {<img src='/menu_ic_soft_comparsion.svg' className='h-6 w-6 mr-1'/>}Software Comparisons</MenuButton>
         </div>
 
         <div className='pb-5'>

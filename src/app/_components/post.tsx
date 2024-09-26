@@ -41,7 +41,7 @@ export default function Post({ post, tag }: PostProps) {
   
 
   return (
-    <div className='w-full mx-auto bg-white rounded-lg border border-gray-200 mb-3'>
+    <div className='w-full mx-auto bg-white rounded-lg border border-gray-200 mb-2'>
       <Link href={`/posts/${post.id}`}>
         <div>
           {post.image ? (
@@ -63,12 +63,12 @@ export default function Post({ post, tag }: PostProps) {
                   {userLoading ? (
                     <div className="h-4 bg-gray-300 rounded-lg w-24 animate-pulse"></div>
                   ) : (
-                    <button className='hover:bg-gray-200 hover:bg-opacity-35 font-semi-bold text-sm text-md z-10'>
+                    <button className='hover:bg-gray-200 hover:bg-opacity-35 font-semi-bold text-sm z-10'>
                       {user?.name}
                     </button>
                   )}
                 </div>
-                <div className='hover:font-light text-sm'>
+                <div className='hover:font-light text-xs'>
                   {post?.createdAt 
                     ? `${new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` 
                     : 'No date available'}
@@ -78,14 +78,14 @@ export default function Post({ post, tag }: PostProps) {
           </Link>
         </div>
         <div>
-          <h2 className="text-3xl hover:text-[#2f3ea8] font-bold mb-2 text-start mx-16">{post?.title}</h2>
+          <h2 className="text-2xl hover:text-[#2f3ea8] font-bold text-start mx-16">{post?.title}</h2>
         </div>
-        <div className='flex gap-4 mx-16 mb-5'>
+        <div className='flex mx-16 mb-5'>
           {tagsLoading ? (
             <div className="h-4 w-40 bg-gray-300 rounded-lg animate-pulse"></div>
           ) : (
             tags?.map((postTag) => (
-              <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>
+              <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-sm text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>
                 #{postTag?.name}
               </Link>
             ))
@@ -103,17 +103,17 @@ export default function Post({ post, tag }: PostProps) {
                       <img 
                         src={emojiMap[emoji as keyof typeof emojiMap]} 
                         alt={emoji} 
-                        className='h-7 w-7 border border-gray-200 rounded-full' 
+                        className='h-5 w-5 border border-gray-200 rounded-full' 
                       />
                     </div>
                   ))}
-                  <div className='text-md font-light ml-3 inline-block whitespace-nowrap'>
+                  <div className='text-sm font-light ml-3 inline-block whitespace-nowrap'>
                     {totalCount} Reaction{totalCount !== 1 ? 's' : ''}
                   </div>
                 </div>
               )
             )}
-            <div className='text-md font-light mx-3 items-center text-center hover:bg-gray-100 rounded-lg px-4 py-1 flex justify-start gap-2'>
+            <div className='text-sm font-light mx-3 items-center text-center hover:bg-gray-100 rounded-lg px-4 py-1 flex justify-start gap-2'>
               <div>
                 <CommentIcon></CommentIcon>
               </div> 

@@ -173,7 +173,8 @@ export const postRouter = createTRPCRouter({
             include: {
               tag : true
             }
-          }
+          },
+          comments : true
         }
     });
     return posts;
