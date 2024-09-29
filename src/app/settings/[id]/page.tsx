@@ -77,29 +77,7 @@ export default function ProfilePage(props : UserProfileProps) {
   };
 
   type UpdateUserInput = z.infer<typeof updateUserSchema>;
-  // const { mutate: updateUser } = api.user.updateUser.useMutation({
-  //   onSuccess: (data) => {
-  //     console.log("User updated successfully:", data);
-  //   },
-  //   onError: (error) => {
-  //     console.error("Error updating user:", error);
-  //   },
-  // });
-  
-  // const onSubmit = (data: UpdateUserInput) => {
-  //   setLoading(true); 
-  
-  //   const updatedData = {
-  //     ...formData,
-  //     ...data,
-  //     id: props.params.id,
-  //     profileImage: (formData.profileImage as string) ?? user?.image,
-  //   };
-  
-  //   updateUser(updatedData);
-  
-  //   setLoading(false);
-  // };
+
   const { mutate: updateUser } = api.user.updateUser.useMutation({
     onSuccess: (data) => {
       console.log("User updated successfully:", data);

@@ -101,56 +101,106 @@ const CreatePost = ({isPreview}: CreatePostProps) => {
   const createPostMutation = api.post.create.useMutation();
 
 
+  // const handleSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   setIsLoading(true);
+  
+  //   try {
+  //     if (!file) {
+  //       console.error('No file selected');
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  
+  //     const coverImageName = encodeURIComponent(file.name);
+  //     const coverImageType = file.type;
+  
+  //     console.log('Generating presigned URL for:', coverImageName, 'with type:', coverImageType);
+  //     const presignedUrl = await generatePresignedUrl(coverImageName, coverImageType);
+  //     console.log('Presigned URL generated:', presignedUrl);
+  
+  //     const response = await fetch(presignedUrl, {
+  //       method: 'PUT',
+  //       body: file,
+        
+  //       headers: {
+  //         'Content-Type': coverImageType,
+  //       },
+  //     });
+  
+  //     if (!response.ok) {
+  //       const errorMessage = await response.text();
+  //       throw new Error(`Failed to upload file: ${errorMessage}`);
+  //     }
+  
+  //     console.log('Image uploaded successfully:', presignedUrl);
+      
+  //     const createPostResponse = await createPostMutation.mutateAsync({
+  //       title,
+  //       content,
+  //       coverImageUrl: `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${coverImageName}`,
+  //       tags,
+  //     });
+  //     console.log('Post creation response:', createPostResponse);
+  //     router.push('/success');
+  
+  //   } catch (error) {
+  //     console.error('Error in upload process:', error);
+  //     alert('Failed to upload file. Please check the console for more details.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-  
+
     try {
-      if (!file) {
-        console.error('No file selected');
-        setIsLoading(false);
-        return;
-      }
-  
-      const coverImageName = encodeURIComponent(file.name);
-      const coverImageType = file.type;
-  
-      console.log('Generating presigned URL for:', coverImageName, 'with type:', coverImageType);
-      const presignedUrl = await generatePresignedUrl(coverImageName, coverImageType);
-      console.log('Presigned URL generated:', presignedUrl);
-  
-      const response = await fetch(presignedUrl, {
-        method: 'PUT',
-        body: file,
-        
-        headers: {
-          'Content-Type': coverImageType,
-        },
-      });
-  
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Failed to upload file: ${errorMessage}`);
-      }
-  
-      console.log('Image uploaded successfully:', presignedUrl);
-      
-      const createPostResponse = await createPostMutation.mutateAsync({
-        title,
-        content,
-        coverImageUrl: `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${coverImageName}`,
-        tags,
-      });
-      console.log('Post creation response:', createPostResponse);
-      router.push('/success');
-  
+        let coverImageUrl: string | undefined; // Declare coverImageUrl as undefined initially
+
+        if (file) {
+            const coverImageName = encodeURIComponent(file.name);
+            const coverImageType = file.type;
+
+            console.log('Generating presigned URL for:', coverImageName, 'with type:', coverImageType);
+            const presignedUrl = await generatePresignedUrl(coverImageName, coverImageType);
+            console.log('Presigned URL generated:', presignedUrl);
+
+            const response = await fetch(presignedUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                    'Content-Type': coverImageType,
+                },
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Failed to upload file: ${errorMessage}`);
+            }
+
+            console.log('Image uploaded successfully:', presignedUrl);
+            coverImageUrl = `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${coverImageName}`; 
+        } else {
+            console.log('No file provided, proceeding without uploading an image.');
+        }
+
+        const createPostResponse = await createPostMutation.mutateAsync({
+            title,
+            content,
+            coverImageUrl,
+            tags,
+        });
+        console.log('Post creation response:', createPostResponse);
+        router.push('/success');
+
     } catch (error) {
-      console.error('Error in upload process:', error);
-      alert('Failed to upload file. Please check the console for more details.');
+        console.error('Error in upload process:', error);
+        alert('Failed to upload file. Please check the console for more details.');
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
   
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
