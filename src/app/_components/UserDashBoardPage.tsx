@@ -127,7 +127,7 @@ export default function UserDashBoardPage({ id }: { id: string }) {
                             <Link href={`/posts/${post.id}`}><span className='text-[#3b49df] text-2xl font-semibold'>{post.title}</span></Link>
                         <div className='flex gap-2 '>
                             <button className='text-red-400 hover:bg-gray-300 rounded-md py-1 px-2' onClick={() => handleDelete(post.id)}>Delete</button>
-                            <Link href={`/settings/${user?.id}`} className='hover:bg-gray-300 rounded-md py-1 px-2'>Edit</Link>
+                            <Link href={`/edit_post/${post?.id}`}  className='hover:bg-gray-300 rounded-md py-1 px-2'>Edit</Link>
                         </div>
                         </div>
                     ))}

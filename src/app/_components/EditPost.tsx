@@ -1,5 +1,5 @@
 "use client"
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '~/trpc/react';
 import { useRouter } from 'next/navigation'; // Import the useRouter hook
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -18,25 +18,31 @@ import {generatePresignedUrl } from '../helper';
 import { FaUpload } from 'react-icons/fa6';
 import FileUploadIcon from './IconFolder/FileUploadIcon';
 import Image from '@tiptap/extension-image';
-
+import Skeleton from 'react-loading-skeleton'; 
 
 interface CreatePostProps {
+  postId : number;
   isPreview: boolean;
   oldContent : string;
-  oldTitle: string
+  oldTitle: string;
+  oldImage : string
 }
 
-const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
-  const [title, setTitle] = useState(oldTitle);
-  const [content, setContent] = useState(oldContent);
+const EditPost = ({postId,isPreview,oldContent,oldTitle,oldImage }: CreatePostProps) => {
+  console.log("The post ID:", postId);
+  const [isLoading, setIsLoading] = useState(false);
+  console.log("Initial loading state:", isLoading);
+
   const router = useRouter();
   const [tags, setTags] = useState<string[]>([])
-  const [imageFile, setImageFile] = useState<string | undefined>(undefined);
+  const [imageFile, setImageFile] = useState<string | undefined>(oldImage ?? '');
 
   const [file, setFile] = useState<File | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
 
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [title, setTitle] = useState<string>(oldTitle);
+  const [content, setContent] = useState<string>(oldContent);
+
 
   const editor = useEditor({
     extensions: [
@@ -70,6 +76,8 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
     
   });
 
+  
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,16 +108,13 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
   const handleIconClick = () => {
     fileInputRef.current?.click();
   };
-  const createPostMutation = api.post.create.useMutation();
-
-
-  
+  const updatePostMutation = api.post.updatePost.useMutation(); 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-        let coverImageUrl: string | undefined; // Declare coverImageUrl as undefined initially
+        let coverImageUrl: string | undefined;
 
         if (file) {
             const coverImageName = encodeURIComponent(file.name);
@@ -135,16 +140,18 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
             console.log('Image uploaded successfully:', presignedUrl);
             coverImageUrl = `https://duythinhtbloggingbucket.s3.amazonaws.com/uploads/${coverImageName}`; 
         } else {
+            coverImageUrl = ''
             console.log('No file provided, proceeding without uploading an image.');
         }
 
-        const createPostResponse = await createPostMutation.mutateAsync({
+        const updatePostResponse = await updatePostMutation.mutateAsync({
+            id: postId,  
             title,
             content,
-            coverImageUrl,
-            tags,
+            image : coverImageUrl,
+            tags : tags,
         });
-        console.log('Post creation response:', createPostResponse);
+        console.log('Post creation response:', updatePostResponse);
         router.push('/success');
 
     } catch (error) {
@@ -180,9 +187,16 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
     setFile(undefined);
   };
   return (
-    <div className='absolute left-[20rem] flex flex-col h-full w-[1000px] bg-neutral-100'>
+    <div>
+      {isLoading ? (
+        <div className='absolute left-[20rem] flex flex-col h-full w-[1000px] bg-neutral-100'>
+
+          
+        </div>
+      ) : (
+      <div className='absolute left-[20rem] flex flex-col h-full w-[1000px] bg-neutral-100'>
       <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col justify-start bg-white rounded-lg border border-neutral-200'>
-        {!isPreview ? (
+        {/* {!isPreview ? (
               <div className="relative h-auto mb-10 mx-16 pt-10">
               {imageFile && file ? (
                 <div className='flex ml-32 justify-start items-center gap-[4rem]'>
@@ -233,8 +247,66 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
                 <div className='flex justify-start items-center'>
                   <img src={imageFile} alt={file.name} width={1000} height={420} />
                 </div>) : (<div className="relative h-auto mx-16"/>)}
-            </div>)}
-
+            </div>)} */}
+          <div>
+          {!isPreview ? (
+            <div className="relative h-auto mb-10 mx-16 pt-10">
+              {imageFile ? (
+                <div className='flex ml-32 justify-start items-center gap-[4rem]'>
+                  {/* Display the image (either from URL or file preview) */}
+                  <img src={imageFile} alt={file ? file.name : "Image"} width={100} height={100} />
+                  <div className='flex items-center'>
+                    <div className="relative inline-block">
+                      <input
+                        type="file"
+                        id="file-upload"
+                        className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                        onChange={handleChange}
+                      />
+                      <label
+                        htmlFor="file-upload"
+                        className="mt-2 block border-[2px] border-gray-300 shadow-sm px-4 py-2 rounded-md text-md relative"
+                      >
+                        Change
+                      </label>
+                    </div>
+                    <button
+                      onClick={handleRemove}
+                      className="mt-2 bg-white text-red-500 px-4 py-2 rounded-lg text-md hover:bg-neutral-100 hover:text-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative inline-block">
+                  <input
+                    type="file"
+                    id="file-upload"
+                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                    onChange={handleChange}
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="block border-2 border-gray-400 px-2 py-2 rounded-md text-xl relative"
+                  >
+                    Add a cover image
+                  </label>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="relative h-auto mb-10 mx-16">
+              {imageFile ? (
+                <div className='flex justify-start items-center'>
+                  <img src={imageFile} alt={file ? file.name : "Image"} width={1000} height={420} />
+                </div>
+              ) : (
+                <div className="relative h-auto mx-16" />
+              )}
+            </div>
+      )}
+          </div>
         <div className='mx-16 w-fit h-fit'> 
           <textarea
             id="title"
@@ -310,12 +382,15 @@ const CreatePost = ({isPreview,oldContent,oldTitle }: CreatePostProps) => {
           disabled={isLoading}
           className="w-fit h-fit px-5 py-3 rounded-md mt-4 text-white bg-[#3b49df] hover:underline hover:bg-[#2f3ab2]"
         >
-          {isLoading ? 'Submitting...' : 'Publish'}
+          {isLoading ? 'Saving...' : 'Save'}
         </button>
       </div>
     </div>
+      )}
+      </div>
   );}
   
   
 
-export default CreatePost;
+export default EditPost;
+

@@ -254,4 +254,32 @@ export const postRouter = createTRPCRouter({
       console.log("Found posts:", posts);
       return posts;
     }),
+
+  updatePost: protectedProcedure
+  .input(z.object({
+    id: z.number(), 
+    title: z.string(),
+    content: z.string(),
+    image : z.string().optional(), 
+    tags: z.array(z.string()).optional(), 
+  }))
+  .mutation(async ({ ctx, input }) => {
+    const { id, title, content, image , tags } = input;
+
+    console.log("Updating post with ID:", id);
+
+    const updatedPost = await ctx.db.post.update({
+      where: { id },
+      data: {
+        title,
+        content,
+        image ,
+
+      },
+    });
+
+    console.log("Post updated successfully:", updatedPost);
+
+    return updatedPost;
+  }),
 });

@@ -1,12 +1,40 @@
-'use client';
-import React, { useState } from 'react'
-import LogoButton from '../_components/LogoButton'
-import CreatePost from '../_components/CreatePostForm'
 
-export default function Page() {
-  const [isPreview, setIsPreview] = useState(false);
+"use client"
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import CreatePost from '~/app/_components/CreatePostForm';
+import EditPost from '~/app/_components/EditPost';
+import LogoButton from '~/app/_components/LogoButton';
+import { api } from '~/trpc/react';
 
-  return (  
+interface EditPostProps {
+    params: {
+      id: string;
+    };
+  }
+  const EditPostPage: React.FC<EditPostProps> = ({ params }) => {
+    const router = useRouter;
+    const [isPreview, setIsPreview] = useState(false);
+
+    const { id } = params;
+        if (typeof id !== 'string') {
+        return <div>Loading...</div>; 
+    }
+    const postId = parseInt(id);
+    const { data: post, isLoading } = api.post.getByID.useQuery({ id: postId }); 
+  console.log("Post id: ", post?.id)
+  if (isLoading) {
+    return <div>Loading post...</div>;
+  }
+
+  if (!post) {
+    return <div>Post not found.</div>;
+  }
+
+  console.log("Post id: ", post.id);
+
+  return (
     <div className='bg-neutral-100 min-h-screen'>
       
       <div className='relative flex justify-around mx-[-10rem] w-full'>
@@ -37,8 +65,8 @@ export default function Page() {
           </button>
         </div>
       </div>    
-      <CreatePost isPreview={isPreview} oldContent='' oldTitle='' />
+      <EditPost postId={postId} isPreview={isPreview} oldContent={post?.content ?? ''} oldTitle={post?.title ?? ''} oldImage={post?.image ?? ''} />
     </div>
   );
 }
-
+export default EditPostPage;
