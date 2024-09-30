@@ -13,6 +13,7 @@ interface NavBarProps {
 }
 export default function HomePage() {
   const { data: session } = useSession();
+  const user = session?.user
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
@@ -41,7 +42,7 @@ export default function HomePage() {
   );
 
   const { data: posts, isLoading } = api.post.getTenLatest.useQuery();
-
+  // console.log(user?.image)
   const [activeButton, setActiveButton] = useState('Relevant');
 
   return (

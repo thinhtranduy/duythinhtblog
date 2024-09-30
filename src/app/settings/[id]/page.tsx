@@ -46,23 +46,59 @@ interface UserProfileProps{
 export default function ProfilePage(props : UserProfileProps) {
   const { register, handleSubmit } = useForm<UpdateUserInput>();
   const { data: user, refetch, isLoading, error } = api.user.getUserById.useQuery(props.params.id);
-  const [formData, setFormData] = useState({
-    username: user?.name ?? '',
-    website: user?.website ?? '',
-    location: user?.location ?? '',
-    bio: user?.bio ?? '',
-    currentlyLearning: user?.currentlyLearning ?? '',
-    availableFor: user?.availableFor ?? '',
-    skills:  user?.skills ?? '',
-    currentlyHacking: user?.currentlyHacking ?? '',
-    pronouns: user?.pronouns ?? '',
-    work : user?.work ?? '',
-    education: user?.education ?? '',
-    brandColor: '#000000',
-    profileImage: user?.image ?? '/DefaultProfileImage.jpeg',
-  });
+  // const [formData, setFormData] = useState({
+  //   username: user?.name ?? '',
+  //   website: user?.website ?? '',
+  //   location: user?.location ?? '',
+  //   bio: user?.bio ?? '',
+  //   currentlyLearning: user?.currentlyLearning ?? '',
+  //   availableFor: user?.availableFor ?? '',
+  //   skills:  user?.skills ?? '',
+  //   currentlyHacking: user?.currentlyHacking ?? '',
+  //   pronouns: user?.pronouns ?? '',
+  //   work : user?.work ?? '',
+  //   education: user?.education ?? '',
+  //   brandColor: '#000000',
+  //   profileImage: user?.image ?? '/DefaultProfileImage.jpeg',
+  // });
 
  
+
+const [formData, setFormData] = useState({
+  username: '',
+  website: '',
+  location: '',
+  bio: '',
+  currentlyLearning: '',
+  availableFor: '',
+  skills: '',
+  currentlyHacking: '',
+  pronouns: '',
+  work: '',
+  education: '',
+  brandColor: '#000000',
+  profileImage: '',
+});
+
+useEffect(() => {
+  if (user) {
+    setFormData({
+      username: user.name ?? '',
+      website: user.website ?? '',
+      location: user.location ?? '',
+      bio: user.bio ?? '',
+      currentlyLearning: user.currentlyLearning ?? '',
+      availableFor: user.availableFor ?? '',
+      skills: user.skills ?? '',
+      currentlyHacking: user.currentlyHacking ?? '',
+      pronouns: user.pronouns ?? '',
+      work: user.work ?? '',
+      education: user.education ?? '',
+      brandColor: '#000000',
+      profileImage: user.image ?? '/DefaultProfileImage.jpeg',
+    });
+  }
+}, [user]);
   const [loading, setLoading] = useState(false);
 
 
