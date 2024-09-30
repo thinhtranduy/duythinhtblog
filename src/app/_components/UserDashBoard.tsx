@@ -8,6 +8,8 @@ import Link from 'next/link';
 
 export default function UserDashBoard() {
   const { data: session } = useSession();
+  const user = session?.user;
+  console.log(user)
   const [isDashboardVisible, setIsDashboardVisible] = useState(false);
   if (!session) {
     return <div>Loading...</div>;
@@ -20,22 +22,22 @@ export default function UserDashBoard() {
   return (
     <div className='relative inline-block'>
         <button onClick={toggleDashboard} className='rounded-full hover:border-2 hover:border-gray-400 hover:shadow hover:shadow-gray-200'>
-        {session.user.image && <img src={session.user.image} alt="User Image" className='rounded-full w-8 h-8'/>}
+        {user?.image && <img src={user?.image} alt="User Image" className='rounded-full w-8 h-8'/>}
       </button>
       {isDashboardVisible && (
         <div className='absolute top-full right-0 flex flex-col justify-start items-start w-64 mt-2 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2' style={{ zIndex: 9999 }}>
 
             <Link 
-            href={`/user/${session.user.id}`}
+            href={`/user/${user?.id}`}
             className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
               <button >
-                    {session.user.name}
+                    {user?.name}
               </button>
         
             </Link>
                     <hr className='border-gray-300 flex-grow w-full'/>
 
-                    <Link href={`/dashboard/${session.user.id}`}
+                    <Link href={`/dashboard/${user?.id}`}
                     className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
                         <button>
                             Dashboard
@@ -49,7 +51,7 @@ export default function UserDashBoard() {
                         </button>
                         </Link>
 
-                      <Link href={`/settings/${session.user.id}`} className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
+                      <Link href={`/settings/${user?.id}`} className='flex text-gray-500 w-full font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline'>
                           <button>
                               Settings
                         </button>

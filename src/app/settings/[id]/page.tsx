@@ -45,7 +45,6 @@ interface UserProfileProps{
 
 export default function ProfilePage(props : UserProfileProps) {
   const { register, handleSubmit } = useForm<UpdateUserInput>();
-  
   const {data : user, refetch} = api.user.getUserById.useQuery(props.params.id)
   const [formData, setFormData] = useState({
     username: user?.name ?? '',
@@ -94,14 +93,21 @@ export default function ProfilePage(props : UserProfileProps) {
 
   const onSubmit = (data: UpdateUserInput) => {
     setLoading(true); 
-  
+
+    console.log("Form Data before submission:", formData);
+
+
+  const updatedProfileImage = formData.profileImage ?? user?.image ?? '';
+    console.log(user?.image)
     const updatedData = {
       ...formData,
       ...data,
       id: props.params.id,
-      profileImage: formData.profileImage ?? user?.image,
+      profileImage: updatedProfileImage, 
       };
   
+      console.log("Updated data being submitted:", updatedData);
+
     updateUser(updatedData); 
   };
 
