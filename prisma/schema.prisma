@@ -74,7 +74,7 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
-    image         String?
+    image         String? 
     userName      String?
     website       String?
     location      String?

@@ -45,7 +45,7 @@ interface UserProfileProps{
 
 export default function ProfilePage(props : UserProfileProps) {
   const { register, handleSubmit } = useForm<UpdateUserInput>();
-  const {data : user, refetch} = api.user.getUserById.useQuery(props.params.id)
+  const { data: user, refetch, isLoading, error } = api.user.getUserById.useQuery(props.params.id);
   const [formData, setFormData] = useState({
     username: user?.name ?? '',
     website: user?.website ?? '',
@@ -59,12 +59,13 @@ export default function ProfilePage(props : UserProfileProps) {
     work : user?.work ?? '',
     education: user?.education ?? '',
     brandColor: '#000000',
-    profileImage: user?.image ?? '',
+    profileImage: user?.image ?? '/DefaultProfileImage.jpeg',
   });
-
 
  
   const [loading, setLoading] = useState(false);
+
+
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -97,7 +98,7 @@ export default function ProfilePage(props : UserProfileProps) {
     console.log("Form Data before submission:", formData);
 
 
-  const updatedProfileImage = formData.profileImage ?? user?.image ?? '';
+  const updatedProfileImage = formData.profileImage ?? user?.image;
     console.log(user?.image)
     const updatedData = {
       ...formData,
