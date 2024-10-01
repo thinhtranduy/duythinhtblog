@@ -101,8 +101,8 @@ export default function UserPage({ id }: { id: string }) {
                             </div>
                         </div>
                     </div>
-                    <div className='flex justify-start items-start md:w-full '>
-                        <div className=' w-[20%] h-[100px] bottom-0 md:left-[20%] transform -translate-y-[-3rem] bg-white p-4 z-20 rounded-lg border border-gray-200 md:flex md:flex-col gap-4 hidden '>
+                    <div className='flex justify-center items-start md:w-full'>
+                        <div className=' w-[20%] h-[100px] bottom-0 right-full transform -translate-y-[-3rem] bg-white p-4 z-20 rounded-lg border border-gray-200 md:flex md:flex-col gap-4 hidden '>
                             <div className='flex justify-start items-center gap-2 text-lg text-black font-light'>
                                 {<IoDocumentTextOutline />} {isLoading ? <Skeleton className='w-32 h-6' /> : `${user?.posts.length} posts published`}
                             </div>
@@ -110,7 +110,7 @@ export default function UserPage({ id }: { id: string }) {
                                 {<FaRegComment />} {isLoading ? <Skeleton className='w-32 h-6' /> : `${user?.comments.length} comments written`}
                             </div>
                         </div>
-                        <div className='h-full relative w-full left-0 md:h-fit md:w-[41%] bottom-0 md:left-[20%] transform -translate-y-[-3rem] px-4 rounded-lg'>
+                        <div className='h-full relative w-full left-0 md:h-fit md:w-[41%] bottom-0  transform -translate-y-[-3rem] px-4 rounded-lg'>
                             {isLoading ? (
                                 <Skeleton className='h-64 w-full' />
                             ) : (
