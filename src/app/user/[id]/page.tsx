@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import React from 'react'
-import UserPage from '~/app/_components/UserPage';
+import UserPage from '~/app/_components/User/UserPage';
 import { api } from '~/trpc/react';
 
 interface UserProfileProps{

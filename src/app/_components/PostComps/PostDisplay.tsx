@@ -2,15 +2,16 @@
 import { useSession } from 'next-auth/react';
 import React, { ReactNode, use, useEffect, useRef, useState } from 'react'
 import { api } from '~/trpc/react';
-import NavBar from './NavBar';
+import NavBar from '../MenuBurger/NavBar';
 import Link from 'next/link';
-import Reaction from './Reaction';
-import CommentIcon from './CommentIcon';
-import BookMarkIcon from './IconFolder/BookMarkIcon';
-import CommentReactIcon from './IconFolder/CommentReactIcon';
-import ReplyIcon from './IconFolder/ReplyIcon';
-import CommentBox from './CommentBox';
-import MenuBar from './MenuBar';
+import Reaction from '../UltilsForPost/Reaction';
+import CommentIcon from '../IconFolder/CommentIcon';
+import BookMarkIcon from '../IconFolder/BookMarkIcon';
+import CommentReactIcon from '../IconFolder/CommentReactIcon';
+import ReplyIcon from '../IconFolder/ReplyIcon';
+import CommentBox from '../UltilsForPost/CommentBox';
+import MenuBar from '../MenuBurger/MenuBar';
+import MenuBurger from '../MenuBurger/MenuBurger';
 
 interface TooltipProps {
   children: ReactNode;
@@ -29,6 +30,8 @@ export default function PostDisplay({ id }: { id: number }) {
   const handleMenuToggle = () => {
     setMenuOpen(prevState => !prevState);
   };
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const emojiMap = {
     sparkle_heart: '/sparkle-heart-5f9bee3767e18deb1bb725290cb151c25234768a0e9a2bd39370c382d02920cf.svg',
@@ -63,6 +66,28 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
       setCounts(initialCounts);
     }
   }, [reactionCounts]);
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto'; 
+    }
+    return () => {
+      document.body.style.overflow = 'auto'; 
+    };
+  }, [menuOpen]);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setMenuOpen(false); 
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
 
   console.log("Counts for emoji: ",counts)
 
@@ -178,8 +203,11 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
   return (
     <div>
       <NavBar onMenuToggle={handleMenuToggle}  ></NavBar>
-      <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
-          <MenuBar />
+      {menuOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 pointer-events-auto" />
+        )}
+      <div ref={menuRef} className={`fixed bg-white rounded-lg top-0 w-[50%] h-screen left-0 z-50  overflow-y-auto md:block ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          < MenuBurger />
         </div>
       <div className='w-full md:w-[90%] flex gap-5'>
         <div className='hidden md:flex w-[14%] mt-20 flex-col items-end relative'>
@@ -203,7 +231,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
               <></>
             )}
           </div>
-          <div className='flex justify-start gap-2 items-center pt-10 mx-16 mb-10'>
+          <div className='flex justify-start gap-2 items-center pt-10 mx-10 md:mx-16 mb-10'>
             {author?.image && <img src={author.image} alt="author Image" className='rounded-full w-10 h-10' />}
             <div className='flex flex-col justify-start'>
               <span className='font-semibold'>{author?.name}</span>
@@ -236,14 +264,14 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                   </Link>
                 ))}</div>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: post?.content }} className='prose mx-auto mb-10'>
+            <div dangerouslySetInnerHTML={{ __html: post?.content }} className='prose mx-10 md:mx-auto mb-10'>
             </div>
             <hr className='border-[0.5px] border-gray-100 mb-10' />
-            <div className='mx-16 w-full'>
+            <div className='mx-10 md:mx-16 w-full'>
               <span className='text-3xl text-black font-bold'>
                 Top comments ({totalCountComment})
               </span>
-              <div className='mt-5 flex w-[99.5%] gap-3'>
+              <div className='mt-5 flex  w-[99.5%] md:w-[97.5%]  gap-3'>
                 <div>
                   {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-10 h-10' />}
                 </div>
@@ -252,10 +280,10 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
 
 
 
-              <div className='mt-5 gap-3 flex flex-col w-[85.5%]'>
+              <div className=' mt-5 gap-3 flex flex-col w-[83.5%]'>
                 {commentPost?.map((comment) => (
                   <div key={comment.id} className='flex flex-col gap-1 mb-5'>
-                    <div className='flex w-full gap-2'>
+                    <div className='flex w-full gap-2 '>
                       {comment.user?.image && (
                         <img src={comment.user?.image} alt="User Image" className='rounded-full w-10 h-10' />
                       )}
@@ -298,7 +326,7 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                               {reply.user?.image && (
                                 <img src={reply.user?.image} alt="User Image" className='rounded-full w-8 h-8' />
                               )}
-                              <div className="border border-neutral-200 min-h-[100px] rounded-lg flex-1 flex flex-col">
+                              <div className="border border-neutral-200 w-[90%] min-h-[100px] rounded-lg flex-1 flex flex-col">
                                 <div className='flex gap-2 justify-start items-center mt-2'>
                                   <span className="ml-5 text-md font-sans font-light">{reply.user?.name}</span>
                                   <span className='text-sm text-gray-400 font-light'>•</span>

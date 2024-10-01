@@ -1,12 +1,12 @@
 "use client"
 import React, { useState } from 'react'
-import NavBar from '~/app/_components/NavBar'
+import NavBar from '~/app/_components/MenuBurger/NavBar'
 import { useSearchParams } from 'next/navigation';
 import { api } from '~/trpc/react';
-import CreatePostButton from '~/app/_components/CreatePostButton';
+import CreatePostButton from '~/app/_components/PostComps/CreatePostButton';
 import Link from 'next/link';
-import Post from '~/app/_components/post';
-import MenuBar from '~/app/_components/MenuBar';
+import Post from '~/app/_components/PostComps/post';
+import MenuBar from '~/app/_components/MenuBurger/MenuBar';
 
 
 export default function TagPage({ params }: { params: { id: string } }) {

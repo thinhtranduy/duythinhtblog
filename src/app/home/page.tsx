@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogOutButton from '../_components/LogOutButton';
-import NavBar from '../_components/NavBar';
+import NavBar from '../_components/MenuBurger/NavBar';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { api } from '~/trpc/react';
-import Post from '../_components/post';
-import MenuBar from '../_components/MenuBar';
-import DiscussionPost from '../_components/Discussion';
+import Post from '../_components/PostComps/post';
+import MenuBar from '../_components/MenuBurger/MenuBar';
+import DiscussionPost from '../_components/PostComps/Discussion';
+import MenuBurger from '../_components/MenuBurger/MenuBurger';
 interface NavBarProps {
   onMenuToggle: () => void; 
 }
@@ -15,6 +16,7 @@ export default function HomePage() {
   const { data: session } = useSession();
   const user = session?.user
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleMenuToggle = () => {
     setMenuOpen(prevState => !prevState);
@@ -40,17 +42,38 @@ export default function HomePage() {
       </div>
     </div>
   );
-
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto'; 
+    }
+    return () => {
+      document.body.style.overflow = 'auto'; 
+    };
+  }, [menuOpen]);
   const { data: posts, isLoading } = api.post.getTenLatest.useQuery();
-  // console.log(user?.image)
   const [activeButton, setActiveButton] = useState('Relevant');
-
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuOpen && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setMenuOpen(false); 
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
   return (
     <div className="min-h-screen bg-neutral-100">
       <NavBar onMenuToggle={handleMenuToggle} />
-      <div className='w-full md:w-[80%] mx-auto flex gap-3'>
-      <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
-          <MenuBar />
+      <div className='w-full md:w-[80%] mx-auto flex gap-3 relative'>
+      {menuOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 pointer-events-auto" />
+        )}
+      <div ref={menuRef} className={`fixed bg-white rounded-lg top-0 w-[50%] h-screen left-0 z-50  overflow-y-auto md:block ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+          < MenuBurger />
         </div>
         <div className={`hidden md:block md:w-[18%] mt-3`}>
           <MenuBar />

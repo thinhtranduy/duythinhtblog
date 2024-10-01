@@ -12,13 +12,14 @@ import GithubIcon from '~/app/_components/IconFolder/GithubIcon'
 import NotificationsIcon from '~/app/_components/IconFolder/NotificationsIcon'
 import OrganizationIcon from '~/app/_components/IconFolder/OrganizationIcon'
 import ProfileIcon from '~/app/_components/IconFolder/ProfileIcon'
-import NavBar from '~/app/_components/NavBar'
+import NavBar from '~/app/_components/MenuBurger/NavBar'
 import { api } from '~/trpc/react'
 import { useState } from 'react';
 import { z } from "zod";
 import { useForm } from 'react-hook-form';
 import { generatePresignedUrl } from '~/app/helper'
-import MenuBar from '~/app/_components/MenuBar'
+import MenuBar from '~/app/_components/MenuBurger/MenuBar'
+import MenuBurger from '~/app/_components/MenuBurger/MenuBurger'
 
 
 const updateUserSchema = z.object({
@@ -175,10 +176,10 @@ export default function ProfilePage(props: UserProfileProps) {
     <div>
       <NavBar onMenuToggle={handleMenuToggle}></NavBar>
       <div className={`md:block mt-3 ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
-        <MenuBar />
+      <MenuBurger/>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-[55%] mx-auto h-full flex mt-7 gap-5 '>
-        <div className='flex flex-col w-[25%] h-fit'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-full md:w-[55%] mx-auto h-full flex mt-7 gap-5 '>
+        <div className='hidden md:flex flex-col w-[25%] h-fit'>
           <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'><ProfileIcon /> Profile</button>
           <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <Customizationicon />Customization</button>
           <button className='w-full h-full flex object-contain gap-2 text-neutral-800  font-light  text-items-start text-md font-sans rounded-lg border-inherit px-3 py-2 my-1 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'> <NotificationsIcon />Notifications</button>

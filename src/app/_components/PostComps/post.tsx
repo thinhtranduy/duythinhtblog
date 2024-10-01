@@ -4,9 +4,9 @@ import { api } from '~/trpc/react';
 import { Post as PrismaPost } from '@prisma/client';
 import { PostTag } from '@prisma/client';
 import Link from 'next/link';
-import HomeIcon from './IconFolder/HomeIcon';
-import CommentIcon from './CommentIcon';
-import BookMarkIcon from './IconFolder/BookMarkIcon';
+import HomeIcon from '../IconFolder/HomeIcon';
+import CommentIcon from '../IconFolder/CommentIcon';
+import BookMarkIcon from '../IconFolder/BookMarkIcon';
 
 interface PostProps {
   post: PrismaPost;

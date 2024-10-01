@@ -3,35 +3,37 @@ import { Mic, Video, Tag, Lightbulb, ShoppingBag, Heart, LucideTrophy, StarIcon,
 import { FaSquareFacebook, FaSquareGithub, FaSquareInstagram, FaSquareXTwitter } from "react-icons/fa6";
 import { FaTwitch, FaMastodon } from "react-icons/fa";
 import { MdEmojiEmotions } from "react-icons/md";
-import HomeIcon from './IconFolder/HomeIcon';
-import DEV from './IconFolder/DEV++';
-import ReadingListIcon from './IconFolder/ReadingList';
-import PodcastIcon from './IconFolder/PodcastIcon';
-import VideosIcon from './IconFolder/VideosIcon';
-import Tags from './IconFolder/Tags';
-import DevHelp from './IconFolder/DevHelp';
-import ForemShop from './IconFolder/ForemShop';
-import Advertise from './IconFolder/Advertise';
-import DevChallenge from './IconFolder/DevChallenge';
-import Showcase from './IconFolder/Showcase';
-import Contact from './IconFolder/Contact';
-import Guides from './IconFolder/Guides';
-import CodeOfConduct from './IconFolder/CodeOfConduct';
-import PrivacyPolicy from './IconFolder/PrivacyPolicy';
-import TermOfUse from './IconFolder/TermOfUse';
+import HomeIcon from '../IconFolder/HomeIcon';
+import ReadingListIcon from '../IconFolder/ReadingList';
+import PodcastIcon from '../IconFolder/PodcastIcon';
+import VideosIcon from '../IconFolder/VideosIcon';
+import Tags from '../IconFolder/Tags';
+import DevHelp from '../IconFolder/DevHelp';
+import ForemShop from '../IconFolder/ForemShop';
+import Advertise from '../IconFolder/Advertise';
+import DevChallenge from '../IconFolder/DevChallenge';
+import Showcase from '../IconFolder/Showcase';
+import Contact from '../IconFolder/Contact';
+import CodeOfConduct from '../IconFolder/CodeOfConduct';
+import PrivacyPolicy from '../IconFolder/PrivacyPolicy';
+import TermOfUse from '../IconFolder/TermOfUse';
 interface MenuButtonProps {
   children: React.ReactNode;
 }
 const MenuButton: React.FC<MenuButtonProps> = ({ children }) => {
     return (
-      <button className='w-full h-full flex object-contain gap-1 text-neutral-800  font-light  text-items-start text-[16px] font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
+      <button className='w-full h-full flex object-contain gap-1 text-neutral-800  font-light text-[16px] text-items-start font-sans rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] hover:underline whitespace-nowrap'>
         {children}
       </button>
     );
   };
-const MenuBar = () => {
+const MenuBurger = () => {
   return (
     <div>
+       <div className=' flex justify-between mx-2 px-2 pt-5 items-center'>
+            <span className='font-semibold text-xl text-black '>DEV Community</span>
+            {/* <button className='hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df] px-1 py-2 rounded-full'>X</button> */}
+        </div>
         <div className=''>
             <MenuButton> {<HomeIcon/>}  Home</MenuButton>
             <MenuButton> {<img src='/devpp.svg' className='h-6 w-6 mr-1'/>}  DEV++</MenuButton>
@@ -75,4 +77,4 @@ const MenuBar = () => {
   )
 }
 
-export default MenuBar
+export default MenuBurger;

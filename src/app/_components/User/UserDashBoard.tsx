@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
-import LogOutButton from './LogOutButton';
+import LogOutButton from '../LogOutButton';
 import Link from 'next/link';
 
 
@@ -25,7 +25,7 @@ export default function UserDashBoard() {
         {user?.image && <img src={user?.image} alt="User Image" className='rounded-full w-8 h-8'/>}
       </button>
       {isDashboardVisible && (
-        <div className='absolute top-full right-0 flex flex-col justify-start items-start w-64 mt-2 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2' style={{ zIndex: 9999 }}>
+        <div className='fixed w-full top-0 right-0  md:fixed md:top-0 md:right-44 mt-[58px]  md:w-64 p-4 border border-gray-300 rounded-lg shadow-lg bg-white gap-2' style={{ zIndex: 9999 }}>
 
             <Link 
             href={`/user/${user?.id}`}

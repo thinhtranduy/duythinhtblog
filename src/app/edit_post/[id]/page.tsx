@@ -3,8 +3,8 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
-import CreatePost from '~/app/_components/CreatePostForm';
-import EditPost from '~/app/_components/EditPost';
+import CreatePost from '~/app/_components/PostComps/CreatePostForm';
+import EditPost from '~/app/_components/PostComps/EditPost';
 import LogoButton from '~/app/_components/LogoButton';
 import { api } from '~/trpc/react';
 

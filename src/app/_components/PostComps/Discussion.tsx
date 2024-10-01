@@ -3,7 +3,7 @@ import React from 'react';
 import { api } from '~/trpc/react';
 import { Post as PrismaPost } from '@prisma/client';
 import Link from 'next/link';
-import HomeIcon from './IconFolder/HomeIcon';
+import HomeIcon from '../IconFolder/HomeIcon';
 interface PostProps {
   post: PrismaPost;
 }

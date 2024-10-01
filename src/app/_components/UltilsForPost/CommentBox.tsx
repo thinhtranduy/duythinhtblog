@@ -76,7 +76,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ id, parentId, onDismiss }) => {
         editable: !isPreview,
         editorProps: {
             attributes: {
-                class: `prose text-md text-black min-h-[150px] min-w-[85%] py-2 px-2 list-disc prose-li:marker:text-black font-light border border-gray-200 hover:border-[#2f3ea8] rounded-t-lg !outline-none ${isPreview ? "cursor-default" : ""}`,
+                class: `prose text-md w-[82%] min-h-[100px] text-black md:min-h-[125px] md:min-w-[85%] py-2 px-2 list-disc prose-li:marker:text-black font-light border border-gray-200 hover:border-[#2f3ea8] rounded-t-lg !outline-none ${isPreview ? "cursor-default" : ""}`,
             },
         },
     });
@@ -85,7 +85,7 @@ const CommentBox: React.FC<CommentBoxProps> = ({ id, parentId, onDismiss }) => {
         <div className='flex-1 tiptap-editor-two'>
             <EditorContent editor={editor} />
             {!isPreview && (
-                <div className='relative max-w-[85%] border border-gray-200 hover:border-[#2f3ea8] rounded-b-lg'>
+                <div className=' relative w-[82%] md:min-w-[85%] border border-gray-200 hover:border-[#2f3ea8] rounded-b-lg'>
                     <div className='flex flex-grow py-1 gap-3'>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleBold().run()}>
                             <BiBold className='text-xl' />

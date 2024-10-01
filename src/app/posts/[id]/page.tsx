@@ -2,8 +2,8 @@
 import { useSession } from 'next-auth/react'
 import React, { useEffect } from 'react'
 import { api } from '~/trpc/react';
-import Post from '../../_components/post';
-import PostDisplay from '~/app/_components/PostDisplay';
+import Post from '../../_components/PostComps/post';
+import PostDisplay from '~/app/_components/PostComps/PostDisplay';
 
 interface PostViewProps {
     params: {
