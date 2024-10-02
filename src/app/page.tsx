@@ -14,7 +14,7 @@ export default async function Home() {
       <div>
         <LogoButton/>
       </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
+      <div className=" mt-4 md:flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
           <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
            Welcome to DevIO! Log in using the button below.
@@ -28,7 +28,7 @@ export default async function Home() {
           </Link>
 
         </div>
-        <div className="flex items-center justify-center p-6">
+        <div className=" md:flex items-center justify-center p-6">
             <Image src="/HomePage.png" alt="Homepageimg" width={1000} height={700}/>
           </div>
       </div>

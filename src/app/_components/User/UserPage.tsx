@@ -11,6 +11,7 @@ import WebsiteIcon from '../IconFolder/websiteIcon';
 import EmailIcon from '../IconFolder/EmailIcon';
 import MenuBar from '../MenuBurger/MenuBar';
 import MenuBurger from '../MenuBurger/MenuBurger';
+import LocationIcon from '../IconFolder/LocationIcon';
 
 export default function UserPage({ id }: { id: string }) {
     const Skeleton = ({ className }: { className?: string }) => (
@@ -82,7 +83,7 @@ export default function UserPage({ id }: { id: string }) {
                                 {isLoading ? <Skeleton className='w-64 h-6' /> : user?.bio ?? '404 bio not found'}
                             </div>
                         </div>
-                        <div className=' flex flex-col justify-center md:flex md:justify-around w-[80%] gap-3 text-neutral-400 text-md my-7'>
+                        <div className=' flex flex-col  justify-center md:flex md:flex-row md:justify-around w-[80%] gap-3 text-neutral-400 text-md my-7'>
                             <div className='flex gap-1 px-3 py-2'>
                                 <BirthdayCakeIcon /> {isLoading ? <Skeleton className='w-32 h-6' /> : 'Joined on 29 Sep 2023'}
                             </div>
@@ -91,6 +92,9 @@ export default function UserPage({ id }: { id: string }) {
                             </div>
                             <div className='flex gap-1 px-3 py-2'>
                                 <WebsiteIcon /> {isLoading ? <Skeleton className='w-32 h-6' /> : user?.website ?? 'ExampleWeb'}
+                            </div>
+                            <div className='flex gap-1 px-3 py-2'>
+                            <LocationIcon/> {isLoading ? <Skeleton className='w-32 h-6' /> : user?.location ?? 'ExampleWeb'}
                             </div>
                         </div>
                         <hr className='border-[1px] border-gray-100 w-full mb-7' />
@@ -110,7 +114,7 @@ export default function UserPage({ id }: { id: string }) {
                                 {<FaRegComment />} {isLoading ? <Skeleton className='w-32 h-6' /> : `${user?.comments.length} comments written`}
                             </div>
                         </div>
-                        <div className='h-full relative w-full left-0 md:h-fit md:w-[41%] bottom-0  transform -translate-y-[-3rem] px-4 rounded-lg'>
+                        <div className='h-full relative w-full left-0 md:h-fit md:w-[41%] bottom-0 ` transform -translate-y-[-3rem] px-4 rounded-lg'>
                             {isLoading ? (
                                 <Skeleton className='h-64 w-full' />
                             ) : (

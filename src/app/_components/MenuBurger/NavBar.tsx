@@ -133,11 +133,6 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuToggle }) => {
 
         </div>
         <div className='flex justify-center items-center gap-3 object-contain'>
-        {/* <div className='md:hidden items-center'>
-          <button className=' px-1 py-1 h-full hover:bg-[#3b49df] hover:rounded-lg'>
-              <SearchIcon/>
-            </button>
-          </div> */}
            <div className='md:hidden items-center'>
       <button
         className='px-1 py-1 h-full hover:bg-[#3b49df] hover:rounded-lg'
@@ -162,7 +157,7 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuToggle }) => {
             />
 
           {showResults && (
-            <div ref={resultsRef} className='absolute left-0 top-full bg-white border border-gray-200 rounded-lg shadow-lg mt-[2px] w-full z-50'>
+            <div ref={resultsRef} className='absolute left-0 top-full overflow-x-scroll  bg-white border border-gray-200 rounded-lg shadow-lg mt-[2px] w-full z-50'>
               {results.map((post) => (
                 <Link href={`/posts/${post.id}`} key={post.id} className='flex flex-col items-start p-2 hover:bg-neutral-200 cursor-pointer'>
                   <span className='font-light text-neutral-400 text-sm'>{post.createdById}</span>
@@ -173,7 +168,7 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuToggle }) => {
             </div>
           )}
            </div>
-          <div className='flex flex-1 flex-col justify-start'>
+          <div className=' flex flex-1 flex-col justify-start'>
             <div className='flex gap-3 text-xl mb-3 '>
               <span>Most Relevant</span>
               <span>Newest</span>

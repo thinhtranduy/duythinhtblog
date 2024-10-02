@@ -49,15 +49,13 @@ export const commentRouter = createTRPCRouter({
 
     const comments = await db.comment.findMany({
       where: {
-        postId,
-        parentId: null, 
+        postId, 
       },
       include: {
         user: true,
-        replies: { // Include replies for each comment
+        replies: { 
           include: {
             user: true, 
-            
           },
           orderBy: {
             createdAt: 'desc',

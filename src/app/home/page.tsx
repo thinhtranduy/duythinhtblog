@@ -66,19 +66,19 @@ export default function HomePage() {
     };
   }, [menuOpen]);
   return (
-    <div className="min-h-screen bg-neutral-100">
+    <div className="min-h-screen w-full bg-neutral-100">
       <NavBar onMenuToggle={handleMenuToggle} />
       <div className='w-full md:w-[80%] mx-auto flex gap-3 relative'>
       {menuOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-30 pointer-events-auto" />
         )}
-      <div ref={menuRef} className={`fixed bg-white rounded-lg top-0 w-[50%] h-screen left-0 z-50  overflow-y-auto md:block ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
+      <div ref={menuRef} className={`fixed bg-white rounded-lg top-0 w-[50%] min-h-screen left-0 z-50  overflow-y-auto md:block ${menuOpen ? 'block md:hidden' : 'hidden md:hidden'}`}>
           < MenuBurger />
         </div>
         <div className={`hidden md:block md:w-[18%] mt-3`}>
           <MenuBar />
         </div>
-        <div className="w-full md:w-[53%] md:flex flex-col">
+        <div className="w-full md:w-[53%] mx-auto md:flex flex-col">
           <div className='flex justify-start gap-3 mb-2 mt-5'>
             <button
               className={`text-lg px-[5px] py-1 hover:bg-white hover:text-[#3b49df] rounded-lg ${activeButton === 'Relevant' ? 'font-semibold text-gray-800' : 'text-gray-800 font-light'}`}

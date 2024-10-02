@@ -12,6 +12,10 @@ import ReplyIcon from '../IconFolder/ReplyIcon';
 import CommentBox from '../UltilsForPost/CommentBox';
 import MenuBar from '../MenuBurger/MenuBar';
 import MenuBurger from '../MenuBurger/MenuBurger';
+import { comment } from 'postcss';
+import RenderComment from '~/app/utils';
+import repliesRendering from '~/app/utils';
+import RepliesRendering from '~/app/utils';
 
 interface TooltipProps {
   children: ReactNode;
@@ -50,9 +54,12 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
 
   const { data: commentPost, refetch } = api.comment.getComments.useQuery({ postId: id })
   const totalCountComment = commentPost?.length;
+  const postComments = commentPost?.filter((comment) => comment.parentId == null)
   const { data: reactionCounts } = api.reaction.getReactionCounts.useQuery<{ emoji: string, count: number }[]>({ postId: id });
   const { data: countReacted } = api.reaction.getReactionCountsForUser.useQuery({ postId: id, userId: user?.id });
-  console.log(reactionCounts)
+  console.log("Total comments:",totalCountComment )
+  const replies = commentPost?.map((comment) => comment.replies)
+  console.log("Replies:", replies )
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {
     if (reactionCounts) {
@@ -219,19 +226,19 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
             </Tooltip>
           </div>
           <div className='mb-10'>
-            <CommentIcon/>
+            <CommentIcon size='medium'/>
           </div>
-          <BookMarkIcon></BookMarkIcon>
+          <BookMarkIcon size='medium'></BookMarkIcon>
         </div>
         <div className="w-full md:w-[59%] bg-white rounded-lg min-h-screen h-full mt-3 border border-neutral-200 ">
           <div>
             {post?.image ? (
-              <img src={post.image} alt={post.title} className="h-[420px] w-full rounded-t-lg mx-auto" />
+              <img src={post.image} alt={post.title} className=" h-[200px] md:h-[300px] w-full rounded-t-lg mx-auto" />
             ) : (
               <></>
             )}
           </div>
-          <div className='flex justify-start gap-2 items-center pt-10 mx-10 md:mx-16 mb-10'>
+          <div className='flex justify-start gap-2 items-center pt-10 md:mx-16 mb-10'>
             {author?.image && <img src={author.image} alt="author Image" className='rounded-full w-10 h-10' />}
             <div className='flex flex-col justify-start'>
               <span className='font-semibold'>{author?.name}</span>
@@ -254,34 +261,36 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                 </div>
               ))}
           </div>
-          <div className='mx-auto'>
-            <div className='mx-auto'>
-              <h2 className="text-5xl font-bold mb-2 text-start mx-16 pb-2">{post?.title}</h2>
-              <div className='flex gap-2 mx-16 mb-10' >
+          <div className=' w-full'>
+            <div className=''>
+              <h2 className="text-4xl font-bold mb-2 text-start mx-16 pb-2">{post?.title}</h2>
+              <div className='flex gap-2 mx-10 mb-10' >
                 {tags?.map((postTag) => (
                   <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-md text-black font-light px-2 py-1 rounded-lg'
                     key={postTag?.id}>#{postTag?.name}
                   </Link>
                 ))}</div>
             </div>
-            <div dangerouslySetInnerHTML={{ __html: post?.content }} className='prose mx-10 md:mx-auto mb-10'>
+            <div dangerouslySetInnerHTML={{ __html: post?.content }} className='prose mx-5 md:mx-auto mb-10'>
             </div>
             <hr className='border-[0.5px] border-gray-100 mb-10' />
-            <div className='mx-10 md:mx-16 w-full'>
-              <span className='text-3xl text-black font-bold'>
+            <div className='mx-3 md:mx-10 md:w-[90%] object-contain '>
+              <span className='text-2xl text-black font-bold'>
                 Top comments ({totalCountComment})
               </span>
-              <div className='mt-5 flex  w-[99.5%] md:w-[97.5%]  gap-3'>
+              <div className='mt-5 flex md:w-full gap-3'>
                 <div>
                   {user?.image && <img src={user.image} alt="User Image" className='rounded-full w-10 h-10' />}
                 </div>
-                <CommentBox key={id} id={id}  parentId={undefined} onDismiss={() => setReplyingToCommentId(null)}></CommentBox>
+                    <div className='w-full flex-1'>
+                      <CommentBox key={id} id={id}  parentId={undefined} onDismiss={() => setReplyingToCommentId(null)}></CommentBox>
+                    </div>
               </div>
 
+              <RepliesRendering postId={id}/>
 
-
-              <div className=' mt-5 gap-3 flex flex-col w-[83.5%]'>
-                {commentPost?.map((comment) => (
+              {/* <div className=' mt-5 gap-3 flex flex-col w-full '>
+                { commentPost?.map((comment) => (
                   <div key={comment.id} className='flex flex-col gap-1 mb-5'>
                     <div className='flex w-full gap-2 '>
                       {comment.user?.image && (
@@ -297,10 +306,10 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                               : 'No date available'}
                           </div>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose mx-5 mt-5 text-xl' />
+                        <div dangerouslySetInnerHTML={{ __html: comment?.text }} className='prose max-w-full mx-5 mt-5 text-md' />
                       </div>
                     </div>
-                    <div className='flex gap-2 ml-[3rem] mt-2 w-[110.5%]'>
+                    <div className='flex gap-2 md:ml-[3rem] mt-2  mx-[2.5rem] w-[90%] md:w-full'>
                       {replyingToCommentId !== comment.id && (
                         <>
                           <div className='hover:bg-gray-200 px-2 py-1 rounded-lg'><CommentReactIcon /></div>
@@ -340,7 +349,8 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                               </div>
                             </div>
                           </div>
-                          <div className='flex gap-2 ml-[3rem] w-[111%] my-3'>
+                          
+                          <div className='flex gap-2 ml-10 my-3'>
                           {replyingToCommentId !== reply.id && (
                             <>
                               <div className='hover:bg-gray-200 px-2 py-1 rounded-lg'><CommentReactIcon /></div>
@@ -357,17 +367,19 @@ const [reacted, setReacted] = useState<{ emoji: string; count: number }[]>([]);
                           )}
                         </div>
                         </>
+                        
                         ))}
                        
                       </div>
                     )}
                   </div>
                 ))}
-              </div>
+              </div> */}
 
             </div>
           </div>
         </div>
+
         <div className=' hidden md:flex flex-col gap-4 flex-1'>
           <div className='flex flex-col bg-white mt-3 rounded-lg h-[500px] border border-gray-300'>
             <div  style={{ backgroundColor: author?.brandColor ?? '#000000' }} className=' h-[7%] rounded-t-lg' />

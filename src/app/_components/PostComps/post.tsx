@@ -43,9 +43,9 @@ export default function Post({ post, tag }: PostProps) {
   return (
     <div className='w-full mx-auto bg-white rounded-lg border border-gray-200 mb-2'>
       <Link href={`/posts/${post.id}`}>
-        <div>
+        <div className='object-contain'>
           {post.image ? (
-            <img src={post.image} alt={post.title} className="h-[360px] w-full rounded-t-lg" />
+            <img src={post.image} alt={post.title} className="h-[260px]  w-full rounded-t-lg" />
           ) : (
             <div className='pt-3'></div>
           )}
@@ -85,13 +85,13 @@ export default function Post({ post, tag }: PostProps) {
             <div className="h-4 w-40 bg-gray-300 rounded-lg animate-pulse"></div>
           ) : (
             tags?.map((postTag) => (
-              <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-sm text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>
+              <Link href={`/tag_post/${postTag.id}`} className='hover:bg-gray-100 text-xs md:text-sm text-black font-light px-2 py-1 rounded-lg' key={postTag?.id}>
                 #{postTag?.name}
               </Link>
             ))
           )}
         </div>
-        <div className='flex justify-between items-center ml-16 mr-4 mb-4'>
+        <div className='flex justify-between items-center ml-16 mr-4 mb-4 object-contain'>
           <div className='flex w-fit px-1 py-2 items-center justify-start text-md'>
             {emojiLoading ? (
               <div className="h-7 w-7 bg-gray-300 rounded-full animate-pulse"></div>
@@ -115,24 +115,29 @@ export default function Post({ post, tag }: PostProps) {
             )}
             <div className='text-sm font-light mx-3 items-center text-center hover:bg-gray-100 rounded-lg px-4 py-1 flex justify-start gap-2'>
               <div>
-                <CommentIcon></CommentIcon>
+                <CommentIcon size='small'></CommentIcon>
               </div> 
+              
               {commentLoading ? (
                 <div className="h-4 bg-gray-300 rounded-lg w-24 animate-pulse"></div>
               ) : (
-                <span className='inline-block whitespace-nowrap'>
+               <div>
+                 <span className='md:inline-block whitespace-nowrap hidden'>
                   {totalCountComment === 0 
                     ? "Add Comment" 
                     : totalCountComment === 1 
                       ? "1 Comment" 
                       : `${totalCountComment} Comments`}
+
                 </span>
+                <span className='md:hidden'>{totalCountComment}</span>
+               </div>
               )}
             </div>
           </div>
           <div className='flex gap-3 justify-center items-center text-sm text-gray-700 font-light'>
             <div className='inline-block whitespace-nowrap'>{readTime} min read</div>
-            <BookMarkIcon></BookMarkIcon>
+            <BookMarkIcon size='small'></BookMarkIcon>
           </div>
         </div>
       </Link>

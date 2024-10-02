@@ -76,40 +76,42 @@ const CommentBox: React.FC<CommentBoxProps> = ({ id, parentId, onDismiss }) => {
         editable: !isPreview,
         editorProps: {
             attributes: {
-                class: `prose text-md w-[82%] min-h-[100px] text-black md:min-h-[125px] md:min-w-[85%] py-2 px-2 list-disc prose-li:marker:text-black font-light border border-gray-200 hover:border-[#2f3ea8] rounded-t-lg !outline-none ${isPreview ? "cursor-default" : ""}`,
+                class: `prose  max-w-full text-md md:w-full text-black min-h-[100px]  md:min-h-[125px] py-2 px-2 list-disc prose-li:marker:text-black font-light border border-gray-200 hover:border-[#2f3ea8] rounded-t-lg !outline-none ${isPreview ? "cursor-default" : ""}`,
             },
         },
     });
 
     return (
-        <div className='flex-1 tiptap-editor-two'>
+        <div className='flex-1 tiptap-editor-two w-full'>
+            <div className='w-full'>
             <EditorContent editor={editor} />
+            </div>
             {!isPreview && (
-                <div className=' relative w-[82%] md:min-w-[85%] border border-gray-200 hover:border-[#2f3ea8] rounded-b-lg'>
-                    <div className='flex flex-grow py-1 gap-3'>
+                <div className=' relative w-full  md:w-full border border-gray-200 hover:border-[#2f3ea8] rounded-b-lg'>
+                    <div className='flex object-contain py-1 gap-3 w-fit'>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleBold().run()}>
-                            <BiBold className='text-xl' />
+                            <BiBold className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleItalic().run()}>
-                            <BiItalic className='text-xl' />
+                            <BiItalic className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().setLink({ href: 'https://example.com' }).run()}>
-                            <BiLink className='text-xl' />
+                            <BiLink className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleBulletList().run()}>
-                            <BiListUl className='text-xl' />
+                            <BiListUl className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
-                            <BiListOl className='text-xl' />
+                            <BiListOl className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}>
-                            <BiHeading className='text-xl' />
+                            <BiHeading className='text-sm md:text-xl' />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleBlockquote().run()}>
                             <BiSolidQuoteAltLeft />
                         </button>
                         <button type="button" className='flex rounded-lg border-inherit px-2 py-2 hover:bg-[#3b49df] hover:bg-opacity-10 hover:text-[#3b49df]' onClick={() => editor?.chain().focus().toggleCode().run()}>
-                            <BiCode className='text-xl' />
+                            <BiCode className='text-sm md:text-xl' />
                         </button>
                     </div>
                 </div>
